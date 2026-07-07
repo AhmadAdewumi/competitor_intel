@@ -1,0 +1,74 @@
+# requirements.txt
+
+# LLM Clients
+openai>=1.0.0
+# WHY: API client for OpenAI models (GPT-4, GPT-4o, etc.)
+# USAGE: Calls the "brain" of our agents
+
+# Configuration Management
+python-dotenv>=1.0.0
+# WHY: Loads environment variables from .env file
+# USAGE: Securely loads API keys and settings
+
+# HTTP & API Clients
+requests>=2.31.0
+# WHY: Makes HTTP requests to external APIs
+# USAGE: Search APIs, web scraping, webhooks
+
+httpx>=0.27.0
+# WHY: Async HTTP client (better performance for concurrent requests)
+# USAGE: Multiple API calls simultaneously
+
+# Data Validation & Modeling
+pydantic>=2.0.0
+# WHY: Runtime type checking and data validation
+# USAGE: Ensures all data is valid before processing
+
+pydantic-settings>=2.0.0
+# WHY: Pydantic-based settings management
+# USAGE: Type-safe configuration with .env integration
+
+# Logging
+loguru>=0.7.0
+# WHY: Better logging than Python's built-in logging
+# USAGE: Structured, colorful, easy-to-read logs
+
+# Date/Time
+python-dateutil>=2.8.0
+# WHY: Robust date and time handling
+# USAGE: Parsing dates from APIs, formatting dates in reports
+
+# Testing
+pytest>=7.0.0
+# WHY: Testing framework
+# USAGE: Runs automated tests
+
+pytest-cov>=4.0.0
+# WHY: Test coverage reporting
+# USAGE: Shows how much code is tested
+
+# Code Quality
+black>=23.0.0
+# WHY: Automatic code formatting
+# USAGE: Consistent code style across all files
+
+ruff>=0.1.0
+# WHY: Fast linting (replaces flake8, isort, etc.)
+# USAGE: Catches common code errors
+
+# Type Checking
+mypy>=1.0.0
+# WHY: Static type checking
+# USAGE: Catches type errors before runtime
+
+# Vector Search (for long-term memory)
+chromadb>=0.4.0
+# sentence-transformers>=2.0.0
+
+# Web Scraping
+beautifulsoup4>=4.12.0
+playwright>=1.40.0
+
+# Report Generation
+markdown>=3.5.0
+jinja2>=3.1.0
