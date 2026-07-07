@@ -1,0 +1,5 @@
+2026-07-07 12:16:12 | INFO     | utils.logger:setup_logger - Logger configured with level: INFO
+2026-07-07 12:16:12 | INFO     | utils.logger:setup_logger - log file created with name: logs/competitor_intel.log
+2026-07-07 12:16:12 | INFO     | llm.client:__init__ - LLM client initialized with provider: LLMProvider.OLLAMA
+2026-07-07 12:16:12 | INFO     | llm.client:_init_ollama - Ollama is running. Available models: ['qwen2:latest', 'qwen2:7b']
+2026-07-07 12:16:12 | INFO     | llm.client:_init_ollama - Default model 'qwen2:7b' is available.
