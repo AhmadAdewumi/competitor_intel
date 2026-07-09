@@ -1,4 +1,5 @@
 from core.agent import BaseAgent
+from core.tool import BaseTool, ToolRegistry
 
 try:
     agent = BaseAgent("Test agent", "Just a test agent")

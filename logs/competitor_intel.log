@@ -8,3 +8,96 @@
 2026-07-07 14:08:22 | INFO     | llm.client:__init__ - LLM client initialized with provider: LLMProvider.OLLAMA
 2026-07-07 14:08:22 | INFO     | llm.client:_init_ollama - Ollama is running. Available models: ['qwen2:latest', 'qwen2:7b']
 2026-07-07 14:08:22 | INFO     | llm.client:_init_ollama - Default model 'qwen2:7b' is available.
+2026-07-08 16:09:02 | INFO     | utils.logger:setup_logger - Logger configured with level: INFO
+2026-07-08 16:09:02 | INFO     | utils.logger:setup_logger - log file created with name: logs/competitor_intel.log
+2026-07-08 16:09:02 | INFO     | core.tool:__init__ - ToolRegistry initialized
+2026-07-08 16:10:03 | INFO     | utils.logger:setup_logger - Logger configured with level: INFO
+2026-07-08 16:10:03 | INFO     | utils.logger:setup_logger - log file created with name: logs/competitor_intel.log
+2026-07-08 16:10:03 | INFO     | core.tool:__init__ - ToolRegistry initialized
+2026-07-09 13:22:45 | INFO     | utils.logger:setup_logger - Logger configured with level: INFO
+2026-07-09 13:22:45 | INFO     | utils.logger:setup_logger - log file created with name: logs/competitor_intel.log
+2026-07-09 13:22:45 | INFO     | core.tool:__init__ - Tool 'calculator' initialized
+2026-07-09 13:22:45 | INFO     | src.tools.calculator:run - Calculator: 5 add 3 = 8
+2026-07-09 13:22:45 | INFO     | src.tools.calculator:run - Calculator: 10 subtract 4 = 6
+2026-07-09 13:22:45 | INFO     | src.tools.calculator:run - Calculator: 6 multiply 7 = 42
+2026-07-09 13:22:45 | INFO     | src.tools.calculator:run - Calculator: 15 divide 3 = 5.0
+2026-07-09 13:22:45 | INFO     | src.core.tool:__init__ - ToolRegistry initialized
+2026-07-09 13:22:45 | INFO     | src.core.tool:register - registered tool: calculator
+2026-07-09 14:58:53 | INFO     | utils.logger:setup_logger - Logger configured with level: INFO
+2026-07-09 14:58:53 | INFO     | utils.logger:setup_logger - log file created with name: logs/competitor_intel.log
+2026-07-09 14:59:26 | INFO     | utils.logger:setup_logger - Logger configured with level: INFO
+2026-07-09 14:59:26 | INFO     | utils.logger:setup_logger - log file created with name: logs/competitor_intel.log
+2026-07-09 14:59:26 | WARNING  | src.tools.search:__init__ - TAVILY_API_KEY not found in environment. Search will fail.
+2026-07-09 14:59:26 | INFO     | core.tool:__init__ - Tool 'search' initialized
+2026-07-09 14:59:26 | INFO     | src.core.tool:__init__ - ToolRegistry initialized
+2026-07-09 14:59:26 | INFO     | src.core.tool:register - registered tool: search
+2026-07-09 14:59:50 | INFO     | utils.logger:setup_logger - Logger configured with level: INFO
+2026-07-09 14:59:50 | INFO     | utils.logger:setup_logger - log file created with name: logs/competitor_intel.log
+2026-07-09 14:59:50 | WARNING  | src.tools.search:__init__ - TAVILY_API_KEY not found in environment. Search will fail.
+2026-07-09 14:59:50 | INFO     | core.tool:__init__ - Tool 'search' initialized
+2026-07-09 14:59:50 | INFO     | src.core.tool:__init__ - ToolRegistry initialized
+2026-07-09 14:59:50 | INFO     | src.core.tool:register - registered tool: search
+2026-07-09 15:00:28 | INFO     | utils.logger:setup_logger - Logger configured with level: INFO
+2026-07-09 15:00:28 | INFO     | utils.logger:setup_logger - log file created with name: logs/competitor_intel.log
+2026-07-09 15:00:43 | INFO     | utils.logger:setup_logger - Logger configured with level: INFO
+2026-07-09 15:00:43 | INFO     | utils.logger:setup_logger - log file created with name: logs/competitor_intel.log
+2026-07-09 15:01:08 | INFO     | utils.logger:setup_logger - Logger configured with level: INFO
+2026-07-09 15:01:08 | INFO     | utils.logger:setup_logger - log file created with name: logs/competitor_intel.log
+2026-07-09 15:02:42 | INFO     | utils.logger:setup_logger - Logger configured with level: INFO
+2026-07-09 15:02:42 | INFO     | utils.logger:setup_logger - log file created with name: logs/competitor_intel.log
+2026-07-09 15:02:42 | INFO     | core.tool:__init__ - Tool 'search' initialized
+2026-07-09 15:02:42 | INFO     | src.tools.search:run - Searching for: 'AI customer service tools 2026' (max_results=3)
+2026-07-09 15:03:02 | ERROR    | src.tools.search:run - Search request failed
+2026-07-09 15:03:02 | INFO     | src.core.tool:__init__ - ToolRegistry initialized
+2026-07-09 15:03:02 | INFO     | src.core.tool:register - registered tool: search
+2026-07-09 15:07:50 | INFO     | utils.logger:setup_logger - Logger configured with level: INFO
+2026-07-09 15:07:50 | INFO     | utils.logger:setup_logger - log file created with name: logs/competitor_intel.log
+2026-07-09 15:07:50 | INFO     | core.tool:__init__ - Tool 'search' initialized
+2026-07-09 15:07:50 | INFO     | src.tools.search:run - Searching for: 'AI customer service tools 2026' (max_results=3)
+2026-07-09 15:08:10 | ERROR    | src.tools.search:run - Search request failed
+2026-07-09 15:08:10 | INFO     | src.core.tool:__init__ - ToolRegistry initialized
+2026-07-09 15:08:10 | INFO     | src.core.tool:register - registered tool: search
+2026-07-09 15:11:16 | INFO     | utils.logger:setup_logger - Logger configured with level: INFO
+2026-07-09 15:11:16 | INFO     | utils.logger:setup_logger - log file created with name: logs/competitor_intel.log
+2026-07-09 15:11:16 | INFO     | core.tool:__init__ - Tool 'search' initialized
+2026-07-09 15:11:16 | INFO     | src.tools.search:run - Searching for: 'AI customer service tools 2026' (max_results=3)
+2026-07-09 15:11:46 | ERROR    | src.tools.search:run - Search request failed
+2026-07-09 15:11:46 | INFO     | src.core.tool:__init__ - ToolRegistry initialized
+2026-07-09 15:11:46 | INFO     | src.core.tool:register - registered tool: search
+2026-07-09 15:15:39 | INFO     | utils.logger:setup_logger - Logger configured with level: INFO
+2026-07-09 15:15:39 | INFO     | utils.logger:setup_logger - log file created with name: logs/competitor_intel.log
+2026-07-09 15:15:39 | INFO     | core.tool:__init__ - Tool 'search' initialized
+2026-07-09 15:15:39 | INFO     | src.tools.search:run - Searching for: 'AI customer service tools 2026' (max_results=3)
+2026-07-09 15:15:59 | ERROR    | src.tools.search:run - Search request failed: HTTPSConnectionPool(host='api.duckduckgo.com', port=443): Max retries exceeded with url: /?q=AI+customer+service+tools+2026&format=json&no_html=1&skip_disambig=1 (Caused by NameResolutionError("HTTPSConnection(host='api.duckduckgo.com', port=443): Failed to resolve 'api.duckduckgo.com' ([Errno -3] Temporary failure in name resolution)"))
+2026-07-09 15:15:59 | INFO     | src.core.tool:__init__ - ToolRegistry initialized
+2026-07-09 15:15:59 | INFO     | src.core.tool:register - registered tool: search
+2026-07-09 16:19:44 | INFO     | utils.logger:setup_logger - Logger configured with level: INFO
+2026-07-09 16:19:44 | INFO     | utils.logger:setup_logger - log file created with name: logs/competitor_intel.log
+2026-07-09 16:19:44 | INFO     | core.tool:__init__ - Tool 'search' initialized
+2026-07-09 16:19:44 | INFO     | src.tools.search:run - Searching for: 'AI customer service tools 2026' (max_results=3)
+2026-07-09 16:20:04 | ERROR    | src.tools.search:run - Search request failed: HTTPSConnectionPool(host='api.duckduckgo.com', port=443): Max retries exceeded with url: /?q=AI+customer+service+tools+2026&format=json&no_html=1&skip_disambig=1 (Caused by NameResolutionError("HTTPSConnection(host='api.duckduckgo.com', port=443): Failed to resolve 'api.duckduckgo.com' ([Errno -3] Temporary failure in name resolution)"))
+2026-07-09 16:20:04 | INFO     | src.core.tool:__init__ - ToolRegistry initialized
+2026-07-09 16:20:04 | INFO     | src.core.tool:register - registered tool: search
+2026-07-09 16:20:09 | INFO     | utils.logger:setup_logger - Logger configured with level: INFO
+2026-07-09 16:20:09 | INFO     | utils.logger:setup_logger - log file created with name: logs/competitor_intel.log
+2026-07-09 16:20:09 | INFO     | core.tool:__init__ - Tool 'search' initialized
+2026-07-09 16:20:09 | INFO     | src.tools.search:run - Searching for: 'AI customer service tools 2026' (max_results=3)
+2026-07-09 16:20:34 | ERROR    | src.tools.search:run - Search request failed: HTTPSConnectionPool(host='api.duckduckgo.com', port=443): Max retries exceeded with url: /?q=AI+customer+service+tools+2026&format=json&no_html=1&skip_disambig=1 (Caused by NameResolutionError("HTTPSConnection(host='api.duckduckgo.com', port=443): Failed to resolve 'api.duckduckgo.com' ([Errno -3] Temporary failure in name resolution)"))
+2026-07-09 16:20:34 | INFO     | src.core.tool:__init__ - ToolRegistry initialized
+2026-07-09 16:20:34 | INFO     | src.core.tool:register - registered tool: search
+2026-07-09 16:21:10 | INFO     | utils.logger:setup_logger - Logger configured with level: INFO
+2026-07-09 16:21:10 | INFO     | utils.logger:setup_logger - log file created with name: logs/competitor_intel.log
+2026-07-09 16:21:10 | INFO     | core.tool:__init__ - Tool 'search' initialized
+2026-07-09 16:21:10 | INFO     | src.tools.search:run - Searching for: 'AI customer service tools 2026' (max_results=3)
+2026-07-09 16:21:20 | INFO     | src.tools.search:run - Search found 3 results
+2026-07-09 16:21:20 | INFO     | src.core.tool:__init__ - ToolRegistry initialized
+2026-07-09 16:21:20 | INFO     | src.core.tool:register - registered tool: search
+2026-07-09 17:23:56 | INFO     | utils.logger:setup_logger - Logger configured with level: INFO
+2026-07-09 17:23:56 | INFO     | utils.logger:setup_logger - log file created with name: logs/competitor_intel.log
+2026-07-09 17:23:56 | INFO     | core.tool:__init__ - Tool 'scrape' initialized
+2026-07-09 17:23:56 | INFO     | src.tools.scrape:run - scraping url: https://example.com
+2026-07-09 17:23:57 | INFO     | src.tools.scrape:run - Scraped 101 characters from https://example.com
+2026-07-09 17:23:57 | INFO     | src.tools.scrape:run - scraping url: https://en.wikipedia.org/wiki/Artificial_intelligence
+2026-07-09 17:24:00 | INFO     | src.tools.scrape:run - Scraped 1515 characters from https://en.wikipedia.org/wiki/Artificial_intelligence
+2026-07-09 17:24:00 | INFO     | src.core.tool:__init__ - ToolRegistry initialized
+2026-07-09 17:24:00 | INFO     | src.core.tool:register - registered tool: scrape
