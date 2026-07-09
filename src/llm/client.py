@@ -177,7 +177,7 @@ class LLMClient:
                     "max_tokens": max_tokens,
                     "stream": False,
                     **kwargs
-                }, timeout=60
+                }, timeout=600
             )
             response.raise_for_status()
             result = response.json()

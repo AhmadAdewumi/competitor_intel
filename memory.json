@@ -1,0 +1,126 @@
+[
+  {
+    "id": "lt_1783619156.330797",
+    "content": "Found 3 AI tools: Tool A, Tool B, Tool C",
+    "type": "research",
+    "timestamp": "2026-07-09T18:45:56.330800",
+    "metadata": {},
+    "tags": []
+  },
+  {
+    "id": "lt_1783619156.331032",
+    "content": "Zendesk is best for small businesses",
+    "type": "fact",
+    "timestamp": "2026-07-09T18:45:56.331034",
+    "metadata": {
+      "source": "website"
+    },
+    "tags": [
+      "zendesk",
+      "pricing"
+    ]
+  },
+  {
+    "id": "lt_1783619156.331237",
+    "content": "Intercom excels at live chat",
+    "type": "fact",
+    "timestamp": "2026-07-09T18:45:56.331239",
+    "metadata": {
+      "source": "website"
+    },
+    "tags": [
+      "intercom",
+      "features"
+    ]
+  },
+  {
+    "id": "lt_1783619156.335526",
+    "content": "Freshdesk offers the best free tier",
+    "type": "fact",
+    "timestamp": "2026-07-09T18:45:56.335528",
+    "metadata": {
+      "source": "website"
+    },
+    "tags": [
+      "freshdesk",
+      "pricing"
+    ]
+  },
+  {
+    "id": "lt_1783620773.713611",
+    "content": "Zendesk is best for small businesses (under 50 employees)",
+    "type": "fact",
+    "timestamp": "2026-07-09T19:12:53.713614",
+    "metadata": {
+      "source": "website"
+    },
+    "tags": [
+      "zendesk",
+      "smb"
+    ]
+  },
+  {
+    "id": "lt_1783620773.713892",
+    "content": "Intercom excels at live chat and messaging",
+    "type": "fact",
+    "timestamp": "2026-07-09T19:12:53.713894",
+    "metadata": {
+      "source": "website"
+    },
+    "tags": [
+      "intercom",
+      "features"
+    ]
+  },
+  {
+    "id": "lt_1783620773.718048",
+    "content": "Freshdesk offers the best free tier and SMB pricing",
+    "type": "fact",
+    "timestamp": "2026-07-09T19:12:53.718051",
+    "metadata": {
+      "source": "website"
+    },
+    "tags": [
+      "freshdesk",
+      "pricing"
+    ]
+  },
+  {
+    "id": "lt_1783620773.718234",
+    "content": "All three tools offer AI chatbot capabilities",
+    "type": "research",
+    "timestamp": "2026-07-09T19:12:53.718235",
+    "metadata": {
+      "source": "analysis"
+    },
+    "tags": [
+      "ai",
+      "chatbot"
+    ]
+  },
+  {
+    "id": "lt_1783620773.718422",
+    "content": "Zendesk and Intercom target enterprise, Freshdesk targets SMBs",
+    "type": "research",
+    "timestamp": "2026-07-09T19:12:53.718423",
+    "metadata": {
+      "source": "analysis"
+    },
+    "tags": [
+      "segmentation"
+    ]
+  },
+  {
+    "id": "lt_1783620773.718538",
+    "content": "AI customer service market expected to grow 25% in 2026",
+    "type": "research",
+    "timestamp": "2026-07-09T19:12:53.718539",
+    "metadata": {
+      "source": "industry report"
+    },
+    "tags": [
+      "market",
+      "growth"
+    ]
+  }
+]
