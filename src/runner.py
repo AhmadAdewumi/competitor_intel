@@ -35,7 +35,7 @@ class TopicRunner:
             log.warning(f"Config file '{config_path}' not found")
 
     def load_config(self) -> None:
-        """Load topics from config file."""
+        """Load topics from src.config file."""
         try:
             with open(self.config_path, "r") as f:
                 config = yaml.safe_load(f)
