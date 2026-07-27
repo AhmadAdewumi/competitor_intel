@@ -6,13 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="dd142113-ecb8-4777-bd80-0fc723ddb887" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/competitor_intel.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/competitor_intel.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/agents/analyst.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/agents/analyst.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/agents/orchestrator.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/agents/orchestrator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/agents/researcher.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/agents/researcher.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/agents/writer.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/agents/writer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/memory.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/memory.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/llm/client.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/llm/client.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,7 +14,17 @@
   </component>
   <component name="EmbeddingIndexingInfo">
     <option name="cachedIndexableFilesCount" value="51" />
-    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
+  </component>
+  <component name="FlaskConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform)); sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo, NoAppException&#10;for module in [&quot;main.py&quot;, &quot;wsgi.py&quot;, &quot;app.py&quot;]:&#10;    try: locals().update(ScriptInfo(app_import_path=module, create_app=None).load_app().make_shell_context()); print(&quot;\nFlask App: %s&quot; % app.import_name); break&#10;    except NoAppException: pass">
+    <envs>
+      <env key="FLASK_APP" value="app" />
+    </envs>
+    <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform)); sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo, NoAppException&#10;for module in [&quot;main.py&quot;, &quot;wsgi.py&quot;, &quot;app.py&quot;]:&#10;    try: locals().update(ScriptInfo(app_import_path=module, create_app=None).load_app().make_shell_context()); print(&quot;\nFlask App: %s&quot; % app.import_name); break&#10;    except NoAppException: pass" />
+    <option name="myEnvs">
+      <map>
+        <entry key="FLASK_APP" value="app" />
+      </map>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -40,61 +43,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0000000054164777" />
-      <entry key="MS500" value="1.0237378319341133" />
-      <entry key="S2" value="1.6334241583892901" />
-      <entry key="S5" value="3.0417253336150587" />
-      <entry key="S10" value="5.055122162299936" />
-      <entry key="S30" value="8.626503973808529" />
-      <entry key="S60" value="11.112823628215144" />
-      <entry key="M2" value="15.998462750266015" />
-      <entry key="M5" value="29.08544890139699" />
-      <entry key="M10" value="53.01656402377469" />
-      <entry key="M15" value="80.35028101347292" />
-      <entry key="M30" value="166.04622137832965" />
-      <entry key="H1" value="315.36706546604506" />
-      <entry key="H2" value="515.8401756749805" />
-      <entry key="H4" value="726.1251654269284" />
-      <entry key="D1" value="1052.726027095695" />
-      <entry key="W1" value="1133.5599942776287" />
+      <entry key="MS100" value="1.0000044124336753" />
+      <entry key="MS500" value="1.1016732239028102" />
+      <entry key="S2" value="2.368555149146135" />
+      <entry key="S5" value="3.8674584164792805" />
+      <entry key="S10" value="5.274025772451413" />
+      <entry key="S30" value="9.259486424230225" />
+      <entry key="S60" value="14.85153799882943" />
+      <entry key="M2" value="25.41736415800758" />
+      <entry key="M5" value="43.06853711201459" />
+      <entry key="M10" value="60.443557342409996" />
+      <entry key="M15" value="77.92553710661042" />
+      <entry key="M30" value="139.21531063307256" />
+      <entry key="H1" value="276.1753182477861" />
+      <entry key="H2" value="500.5789989476335" />
+      <entry key="H4" value="761.7058749703345" />
+      <entry key="D1" value="1197.5126845757452" />
+      <entry key="W1" value="1309.7817227826765" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="2.439581706545711E-19" />
-      <entry key="MS500" value="1.8943624375438998E-4" />
-      <entry key="S2" value="0.11775065574582437" />
-      <entry key="S5" value="0.4694881277802116" />
-      <entry key="S10" value="0.8638446583396648" />
-      <entry key="S30" value="1.4688569649265948" />
-      <entry key="S60" value="1.8314636333362877" />
-      <entry key="M2" value="2.7011198511704153" />
-      <entry key="M5" value="6.567682205410133" />
-      <entry key="M10" value="14.987694925025384" />
-      <entry key="M15" value="24.58580823331427" />
-      <entry key="M30" value="52.36717699211467" />
-      <entry key="H1" value="96.7493944447502" />
-      <entry key="H2" value="153.74943480141872" />
-      <entry key="H4" value="211.55267053957732" />
-      <entry key="D1" value="298.24693951298065" />
-      <entry key="W1" value="319.2613737333146" />
+      <entry key="MS100" value="0.002355093413458517" />
+      <entry key="MS500" value="0.29812721980856266" />
+      <entry key="S2" value="0.7453705436259204" />
+      <entry key="S5" value="1.018967224166136" />
+      <entry key="S10" value="1.30591151803582" />
+      <entry key="S30" value="1.7019942928661216" />
+      <entry key="S60" value="1.9577243689512325" />
+      <entry key="M2" value="2.409029870823866" />
+      <entry key="M5" value="3.1230921589788228" />
+      <entry key="M10" value="3.8569455953381304" />
+      <entry key="M15" value="5.300060319267452" />
+      <entry key="M30" value="16.211177934095975" />
+      <entry key="H1" value="50.49745168127183" />
+      <entry key="H2" value="111.18522103037125" />
+      <entry key="H4" value="182.0947801776964" />
+      <entry key="D1" value="298.2438998842998" />
+      <entry key="W1" value="327.7111280772511" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="4.060392358899531E-6" />
-      <entry key="MS500" value="0.09499661271547125" />
-      <entry key="S2" value="1.142061034693351" />
-      <entry key="S5" value="3.1124291063087464" />
-      <entry key="S10" value="5.647021252748466" />
-      <entry key="S30" value="9.963476806263932" />
-      <entry key="S60" value="12.86452211972463" />
-      <entry key="M2" value="18.64569423617203" />
-      <entry key="M5" value="35.611856622148366" />
-      <entry key="M10" value="67.96140942300384" />
-      <entry key="M15" value="104.8896430518544" />
-      <entry key="M30" value="218.36257119211535" />
-      <entry key="H1" value="412.0678262260939" />
-      <entry key="H2" value="669.550043808023" />
-      <entry key="H4" value="937.6502584814572" />
-      <entry key="D1" value="1350.9664143725715" />
-      <entry key="W1" value="1452.820364121989" />
+      <entry key="MS100" value="0.052591523018464564" />
+      <entry key="MS500" value="0.7457716647402641" />
+      <entry key="S2" value="2.755218787038315" />
+      <entry key="S5" value="4.681180580795218" />
+      <entry key="S10" value="6.441075453463678" />
+      <entry key="S30" value="10.885469375428212" />
+      <entry key="S60" value="16.750948864538806" />
+      <entry key="M2" value="27.779261993888795" />
+      <entry key="M5" value="46.162036259773764" />
+      <entry key="M10" value="64.28141960751068" />
+      <entry key="M15" value="83.20933823150803" />
+      <entry key="M30" value="155.4071710745389" />
+      <entry key="H1" value="326.6455250071781" />
+      <entry key="H2" value="611.7346794353465" />
+      <entry key="H4" value="943.7764589347959" />
+      <entry key="D1" value="1495.7499569518843" />
+      <entry key="W1" value="1637.4918096719086" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -102,6 +105,9 @@
   &quot;fromUser&quot;: false
 }</component>
   <component name="ProjectId" id="3FgUPXYb2Z77dQhSoAOBtruONsj" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -188,8 +194,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-PY-261.26222.68" />
-        <option value="bundled-python-sdk-50341a9f1f9c-c2ffad84badb-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-261.26222.68" />
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-PY-262.8665.309" />
+        <option value="bundled-python-sdk-c6d794e1806d-5bd6d13a2a75-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-262.8665.309" />
       </set>
     </attachedChunks>
   </component>
@@ -222,6 +228,7 @@
       <workItem from="1783521296275" duration="3959000" />
       <workItem from="1783591237973" duration="3655000" />
       <workItem from="1783598783806" duration="24753000" />
+      <workItem from="1785168910564" duration="333000" />
     </task>
     <servers />
   </component>
