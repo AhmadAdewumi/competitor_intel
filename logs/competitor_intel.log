@@ -5785,3 +5785,69 @@ UnboundLocalError: cannot access local variable 'os' where it is not associated 
 2026-07-27 11:06:02 | INFO     | src.runner:_save_and_send_report - 📧 Sending report to ahmadadewumi@gmail.com...
 2026-07-27 11:06:17 | INFO     | src.utils.email_sender:send_report - ✅ Email sent to ahmadadewumi@gmail.com
 2026-07-27 11:06:17 | INFO     | src.runner:_save_and_send_report - ✅ Email sent to ahmadadewumi@gmail.com
+2026-07-27 13:14:49 | INFO     | src.utils.logger:setup_logger - Logger configured with level: INFO
+2026-07-27 13:14:49 | INFO     | src.utils.logger:setup_logger - log file created with name: logs/competitor_intel.log
+2026-07-27 13:14:49 | INFO     | core.memory:__init__ - ShortTermMemory initialized (max_entries=100)
+2026-07-27 13:14:49 | INFO     | core.memory:_load - Loaded 162 entries from memory.json
+2026-07-27 13:14:49 | INFO     | core.memory:__init__ - LongTermMemory initialized (max_entries=1000)
+2026-07-27 13:14:49 | INFO     | core.memory:__init__ - MemorySystem initialized
+2026-07-27 13:14:49 | INFO     | utils.logger:setup_logger - Logger configured with level: INFO
+2026-07-27 13:14:49 | INFO     | utils.logger:setup_logger - log file created with name: logs/competitor_intel.log
+2026-07-27 13:14:49 | INFO     | llm.client:__init__ - LLM client initialized with provider: LLMProvider.OPENROUTER
+2026-07-27 13:14:49 | ERROR    | app:run_in_background - Background thread crashed: OPENROUTER_API_KEY not found in environment variables.
+2026-07-27 13:14:49 | ERROR    | app:run_in_background - Traceback (most recent call last):
+  File "/home/ahmad/PYTHON PROJECTS/competitor_intel/app/__init__.py", line 248, in run_in_background
+    from src.runner import TopicRunner
+  File "/home/ahmad/PYTHON PROJECTS/competitor_intel/src/runner.py", line 10, in <module>
+    from src.agents.orchestrator import Orchestrator
+  File "/home/ahmad/PYTHON PROJECTS/competitor_intel/src/agents/orchestrator.py", line 13, in <module>
+    from src.agents.analyst import AnalystAgent
+  File "/home/ahmad/PYTHON PROJECTS/competitor_intel/src/agents/analyst.py", line 9, in <module>
+    from src.core.agent import BaseAgent
+  File "/home/ahmad/PYTHON PROJECTS/competitor_intel/src/core/agent.py", line 9, in <module>
+    from llm.client import llm_client
+  File "/home/ahmad/PYTHON PROJECTS/competitor_intel/src/llm/client.py", line 404, in <module>
+    llm_client = LLMClient()
+  File "/home/ahmad/PYTHON PROJECTS/competitor_intel/src/llm/client.py", line 37, in __init__
+    self._init_openrouter()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/ahmad/PYTHON PROJECTS/competitor_intel/src/llm/client.py", line 96, in _init_openrouter
+    raise ValueError("OPENROUTER_API_KEY not found in environment variables.")
+ValueError: OPENROUTER_API_KEY not found in environment variables.
+
+2026-07-27 13:15:31 | INFO     | src.utils.logger:setup_logger - Logger configured with level: INFO
+2026-07-27 13:15:31 | INFO     | src.utils.logger:setup_logger - log file created with name: logs/competitor_intel.log
+2026-07-27 13:15:31 | INFO     | core.memory:__init__ - ShortTermMemory initialized (max_entries=100)
+2026-07-27 13:15:31 | INFO     | core.memory:_load - Loaded 162 entries from memory.json
+2026-07-27 13:15:31 | INFO     | core.memory:__init__ - LongTermMemory initialized (max_entries=1000)
+2026-07-27 13:15:31 | INFO     | core.memory:__init__ - MemorySystem initialized
+2026-07-27 13:15:31 | INFO     | utils.logger:setup_logger - Logger configured with level: INFO
+2026-07-27 13:15:31 | INFO     | utils.logger:setup_logger - log file created with name: logs/competitor_intel.log
+2026-07-27 13:15:31 | INFO     | llm.client:__init__ - LLM client initialized with provider: LLMProvider.OPENROUTER
+2026-07-27 13:15:31 | INFO     | llm.client:_init_openrouter - OpenRouter client initialized successfully.
+2026-07-27 13:15:31 | INFO     | llm.client:_init_openrouter - Default model: google/gemma-4-31b-it:free
+2026-07-27 13:15:31 | INFO     | src.core.memory:__init__ - ShortTermMemory initialized (max_entries=100)
+2026-07-27 13:15:31 | INFO     | src.core.memory:_load - Loaded 162 entries from memory.json
+2026-07-27 13:15:31 | INFO     | src.core.memory:__init__ - LongTermMemory initialized (max_entries=1000)
+2026-07-27 13:15:31 | INFO     | src.core.memory:__init__ - MemorySystem initialized
+2026-07-27 13:15:32 | INFO     | src.utils.email_sender:__init__ - Email sender configured: ahmadadewumi@gmail.com
+2026-07-27 13:15:32 | INFO     | src.core.agent:__init__ - Agent 'Orchestrator' initialized
+2026-07-27 13:15:32 | INFO     | src.core.agent:__init__ - Agent 'Researcher' initialized
+2026-07-27 13:15:32 | INFO     | core.tool:__init__ - Tool 'search' initialized
+2026-07-27 13:15:32 | INFO     | core.tool:__init__ - Tool 'scrape' initialized
+2026-07-27 13:15:32 | INFO     | core.tool:__init__ - Tool 'calculator' initialized
+2026-07-27 13:15:32 | INFO     | src.agents.researcher:__init__ - Researcher Agent initialized with tools
+2026-07-27 13:15:32 | INFO     | src.core.agent:__init__ - Agent 'Analyst' initialized
+2026-07-27 13:15:32 | INFO     | core.tool:__init__ - Tool 'calculator' initialized
+2026-07-27 13:15:32 | INFO     | src.agents.analyst:__init__ - Analyst Agent initialized
+2026-07-27 13:15:32 | INFO     | src.core.agent:__init__ - Agent 'Writer' initialized
+2026-07-27 13:15:32 | INFO     | src.agents.writer:__init__ - Writer Agent initialized
+2026-07-27 13:15:32 | INFO     | src.agents.orchestrator:__init__ - Orchestrator initialized with all agents
+2026-07-27 13:15:32 | INFO     | src.runner:load_config - Loaded 4 topics from config
+2026-07-27 13:15:32 | INFO     | src.runner:run_topic - 
+============================================================
+2026-07-27 13:15:32 | INFO     | src.runner:run_topic - 📚 Starting research on: AI Customer Service Tools
+2026-07-27 13:15:32 | INFO     | src.runner:run_topic - ============================================================
+2026-07-27 13:15:32 | INFO     | src.core.agent:run - Agent 'Orchestrator' starting task: 'Research AI Customer Service Tools: Research and analyze AI customer service tools market. Search specifically for: AI customer service tools 2026, best AI chatbot for customer service. Also analyze these specific websites: https://www.zendesk.com/, https://www.intercom.com/'
+2026-07-27 13:15:32 | INFO     | src.core.agent:add_step - [Orchestrator_20260727_131532] Step: Planning....
+2026-07-27 13:15:32 | INFO     | src.agents.orchestrator:plan - Orchestrator planning for: Research AI Customer Service Tools: Research and analyze AI customer service tools market. Search specifically for: AI customer service tools 2026, best AI chatbot for customer service. Also analyze these specific websites: https://www.zendesk.com/, https://www.intercom.com/

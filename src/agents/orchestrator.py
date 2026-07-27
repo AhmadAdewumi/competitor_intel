@@ -10,10 +10,10 @@
 
 from typing import Any, Dict, List
 
-from config.constants import AgentLimits
 from src.agents.analyst import AnalystAgent
 from src.agents.researcher import ResearcherAgent
 from src.agents.writer import WriterAgent
+from src.config.constants import AgentLimits
 from src.core.agent import BaseAgent
 from src.core.memory import memory
 from src.utils.logger import log
