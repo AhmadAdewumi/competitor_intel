@@ -1,6 +1,6 @@
 # src/agents/analyst.py
 # Analyst Agent
-
+import os
 # : Analyze researched data and draw conclusions.
 # Raw data is useless without analysis, Reads memory, analyzes patterns, saves insights.
 # ============================================
@@ -239,6 +239,14 @@ Compare these findings."""
         """
         Draw conclusions and insights.
         """
+        from src.utils.trace import publish_trace
+
+        # Debug: check if run_id exists
+        run_id = os.environ.get("CURRENT_RUN_ID")
+        log.info(f"Trace debug: CURRENT_RUN_ID = {run_id}")
+
+        publish_trace("Analyst", "Drawing conclusions and insights...")
+
         # Get recent analysis from context
         patterns = self._get_last_patterns()
         comparison = self._get_last_comparison()
@@ -256,15 +264,24 @@ Compare these findings."""
 
         user_prompt = f"""Task: {step}
 
-Patterns identified:
-{patterns if patterns else "No patterns identified"}
+    Patterns identified:
+    {patterns if patterns else "No patterns identified"}
 
-Comparison:
-{comparison if comparison else "No comparison available"}
+    Comparison:
+    {comparison if comparison else "No comparison available"}
 
-Draw conclusions and insights."""
+    Draw conclusions and insights."""
 
         response = self.ask_llm(system_prompt, user_prompt)
+
+        publish_trace("Analyst", "Conclusions drawn", response[:200])
+
+        memory.remember(
+            content=f"Analysis conclusion: {response[:500]}",
+            entry_type="insight",
+            metadata={"step": step},
+            tags=["analysis", "conclusion"],
+        )
 
         return {"summary": "Conclusions drawn", "conclusions": response}
 

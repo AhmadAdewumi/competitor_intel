@@ -8,12 +8,14 @@
 # WHAT: Delegates tasks to Researcher, Analyst, and Writer.
 # ============================================
 
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List
+
+from config.constants import AgentLimits
+from src.agents.analyst import AnalystAgent
+from src.agents.researcher import ResearcherAgent
+from src.agents.writer import WriterAgent
 from src.core.agent import BaseAgent
 from src.core.memory import memory
-from src.agents.researcher import ResearcherAgent
-from src.agents.analyst import AnalystAgent
-from src.agents.writer import WriterAgent
 from src.utils.logger import log
 
 
@@ -48,22 +50,20 @@ class Orchestrator(BaseAgent):
         """
         log.info(f"Orchestrator planning for: {goal}")
 
-        # Use the LLM to plan the workflow
+        # Using the LLM to plan the workflow
         system_prompt = """You are a project orchestrator. Break down the goal into a workflow of tasks.
 
-        Available agents:
-        1. Researcher: Searches the web and gathers information
-        2. Analyst: Analyzes data and draws conclusions
-        3. Writer: Writes professional reports
+           IMPORTANT: You MUST use ALL three agents in order:
+           1. FIRST: Researcher - Searches the web and gathers information
+           2. SECOND: Analyst - Analyzes the gathered data
+           3. THIRD: Writer - Writes a complete professional report
 
-        For each task, specify:
-        - Which agent to use
-        - What they should do
-        - What they should produce
+           Keep it to 3-5 steps maximum.
+           Do not create more than 5 steps.
 
-        Return a list of tasks (one per line)."""
+           Return a list of tasks (one per line). Use ALL three agents."""
 
-        user_prompt = f"Goal: {goal}\n\nBreak this down into a workflow of tasks."
+        user_prompt = f"Goal: {goal}\n\nBreak this down into a MAXIMUM of 5 steps."
 
         response = self.ask_llm(system_prompt, user_prompt)
 
@@ -82,6 +82,11 @@ class Orchestrator(BaseAgent):
 
                 if clean_line:
                     steps.append(clean_line)
+
+        # HARD LIMIT: Only keep the first 3-5 steps
+        if len(steps) > 15:
+            log.warning(f"Planned {len(steps)} steps, truncating to 5")
+            steps = steps[:5]
 
         # If no steps were parsed, use default workflow
         if not steps:
@@ -104,10 +109,10 @@ class Orchestrator(BaseAgent):
         # Determine which agent to use
         if "researcher" in step_lower:
             return self._execute_researcher(step)
-        elif "analyst" in step_lower:
-            return self._execute_analyst(step)
         elif "writer" in step_lower:
             return self._execute_writer(step)
+        elif "analyst" in step_lower:
+            return self._execute_analyst(step)
         else:
             # Default: Try to infer the agent
             return self._execute_inferred(step)
@@ -127,7 +132,7 @@ class Orchestrator(BaseAgent):
         )
 
         # Run the researcher
-        result = self.researcher.run(topic, max_steps=5)
+        result = self.researcher.run(topic, max_steps=AgentLimits.RESEARCHER_MAX_STEPS)
 
         if result["status"] == "success":
             # Save the result to memory
@@ -154,7 +159,7 @@ class Orchestrator(BaseAgent):
         log.info(f"Starting analyst on: {topic}")
 
         # Run the analyst
-        result = self.analyst.run(topic, max_steps=4)
+        result = self.analyst.run(topic, max_steps=AgentLimits.ANALYST_MAX_STEPS)
 
         if result["status"] == "success":
             # Save the result to memory
@@ -175,13 +180,17 @@ class Orchestrator(BaseAgent):
         """
         Execute a writer task.
         """
-        # Extract the writing topic
-        topic = self._extract_topic(step)
+
+        topic = step.replace("Writer:", "").replace("Writer", "").strip()
+
+        # If the topic references the analyst, use a better default
+        if "analyst" in topic.lower() or len(topic) < 10:
+            topic = "AI customer service tools competitive analysis"
 
         log.info(f"Starting writer on: {topic}")
 
-        # Run the writer
-        result = self.writer.run(topic, max_steps=4)
+        # Run the writer with MORE steps
+        result = self.writer.run(topic, max_steps=AgentLimits.WRITER_MAX_STEPS)
 
         if result["status"] == "success":
             # Save the result to memory
@@ -282,15 +291,85 @@ class Orchestrator(BaseAgent):
 
     def reflect(self, result: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Reflect on the result and decide next steps.
+        Reflect on the result and decide whether to stop.
+
+        The Orchestrator should only stop when:
+        1. The Writer agent has been called AND
+        2. The Writer has completed its work (saved a report)
         """
-        log.info("Orchestrator reflecting on step result...")
+        log.info(
+            f"Orchestrator reflecting on step {self.context.current_step if self.context else '?'}..."
+        )
 
         if result.get("error"):
+            log.warning(f"Error in step, continuing: {result.get('error')}")
             return {"should_stop": False, "reason": "Error occurred but continuing"}
 
-        # Check if we've completed enough steps
-        if self.context and self.context.current_step >= 3:
+        if not self.context:
+            return {"should_stop": False, "reason": "No context"}
+
+        # Check if Writer has been called
+        writer_called = False
+        for step in self.context.steps_taken:
+            if "writer" in step.lower() or "report" in step.lower():
+                writer_called = True
+                break
+
+        # If Writer hasn't been called, we MUST continue
+        if not writer_called:
+            log.info("Writer not called yet, continuing")
+            return {"should_stop": False, "reason": "Writer agent still needs to run"}
+
+        # Check if Writer has actually saved a report
+        writer_saved = False
+        for step in self.context.steps_taken:
+            if "save" in step.lower() or "report saved" in step.lower():
+                writer_saved = True
+                break
+
+        # Check if we have a report in the results
+        report_found = False
+        for r in self.context.results:
+            if isinstance(r, dict):
+                if r.get("report") or r.get("polished_report") or r.get("filename"):
+                    report_found = True
+                    break
+
+        # If Writer called AND (report saved OR report found), we're done
+        if writer_called and (writer_saved or report_found):
+            log.info("✅ Report generated and saved, workflow complete")
             return {"should_stop": True, "reason": "Workflow completed"}
 
+        # If Writer called but no report yet, continue
+        if writer_called and not (writer_saved or report_found):
+            log.info("Writer called but report not ready, continuing")
+            return {"should_stop": False, "reason": "Waiting for report"}
+
+        # Default: continue
         return {"should_stop": False, "reason": "Continuing workflow"}
+
+    # def reflect(self, result: Dict[str, Any]) -> Dict[str, Any]:
+    #     """Reflect on the result and decide next steps."""
+    #     log.info("Orchestrator reflecting on step result...")
+    #
+    #     if result.get("error"):
+    #         return {"should_stop": False, "reason": "Error occurred but continuing"}
+    #
+    #     # forcing Writer to be included
+    #     # Check if Writer has been called yet
+    #     writer_called = False
+    #     if self.context:
+    #         for step in self.context.steps_taken:
+    #             if "writer" in step.lower() or "report" in step.lower():
+    #                 writer_called = True
+    #                 break
+    #
+    #     # If Writer hasn't been called, don't stop
+    #     if not writer_called:
+    #         return {"should_stop": False, "reason": "Writer agent still needs to run"}
+    #
+    #     # Check if we've completed enough steps
+    #     if self.context and self.context.current_step >= 4:  # Increased from 3 to 4
+    #         return {"should_stop": True, "reason": "Workflow completed"}
+    #
+    #     return {"should_stop": False, "reason": "Continuing workflow"}

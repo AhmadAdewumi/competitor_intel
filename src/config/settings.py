@@ -15,15 +15,20 @@ env_file = Path(".env")
 if env_file.exists():
     load_dotenv(env_file)
 
-#Provider Enum
+
+# Provider Enum
 class LLMProvider(str, Enum):
-    OLLAMA = "ollama",
-    GROQ = "groq",
-    OPENAI = "openai"
+    OLLAMA = ("ollama",)
+    GROQ = ("groq",)
+    OPENAI = ("openai",)
+    OPENROUTER = "openrouter"
+
 
 # LLM SETTINGS
 
 DEFAULT_MODEL = "qwen2:7b"
+
+
 class LLMSettings(BaseSettings):
     """Configuration for the LLM client."""
 
@@ -33,7 +38,9 @@ class LLMSettings(BaseSettings):
     researcher_model: str = Field(default=DEFAULT_MODEL, description="Model for research tasks")
     orchestrator_model: str = Field(default=DEFAULT_MODEL, description="Model for orchestration")
 
-    provider: LLMProvider = Field(default=LLMProvider.OLLAMA, description="LLMProvider to use: groq, ollama or openai")
+    provider: LLMProvider = Field(
+        default=LLMProvider.OLLAMA, description="LLMProvider to use: groq, ollama or openai"
+    )
 
     temperature: float = Field(
         default=0.7,
@@ -42,7 +49,7 @@ class LLMSettings(BaseSettings):
         description="Controls randomness 0 = deterministic, 1 = creative",
     )
     max_tokens: int = Field(default=2048, ge=1, le=8192, description="Maximum tokens in response")
-    timeout: int = Field(default=120, ge=5, le=300, description="Timeout in seconds for API calls")
+    timeout: int = Field(default=30, ge=5, le=300, description="Timeout in seconds for API calls")
     max_retries: int = Field(
         default=3, ge=0, le=10, description="Number of retries for failed API calls"
     )
@@ -55,6 +62,7 @@ class LLMSettings(BaseSettings):
 
 
 # AGENT SETTINGS
+
 
 class AgentSettings(BaseSettings):
     """Configuration for agent behavior."""
@@ -76,6 +84,7 @@ class AgentSettings(BaseSettings):
 
 
 # TOOL SETTINGS
+
 
 class ToolSettings(BaseSettings):
     """Configuration for tools."""
@@ -100,6 +109,7 @@ class ToolSettings(BaseSettings):
 
 # MEMORY SETTINGS
 
+
 class MemorySettings(BaseSettings):
     """Configuration for the memory system."""
 
@@ -117,6 +127,7 @@ class MemorySettings(BaseSettings):
 
 # MAIN SETTINGS CLASS
 
+
 class Settings(BaseSettings):
     """
     Main configuration for CompetitorIntel.
@@ -131,8 +142,14 @@ class Settings(BaseSettings):
     )
 
     groq_api_key: SecretStr | None = Field(
-            default=None, validation_alias="GROQ_API_KEY", description="Groq API key for LLM calls."
-        )
+        default=None, validation_alias="GROQ_API_KEY", description="Groq API key for LLM calls."
+    )
+
+    openrouter_api_key: SecretStr | None = Field(
+        default=None,
+        validation_alias="OPENROUTER_API_KEY",
+        description="OpenRouter API key for LLM calls.",
+    )
 
     tavily_api_key: Optional[SecretStr] = Field(
         default=None, validation_alias="TAVILY_API_KEY", description="Tavily API key for search."
@@ -187,7 +204,7 @@ class Settings(BaseSettings):
 
     def model_post_init(self, __context: Any) -> None:
         """Check required fields after initialization.
-            diff providers need diff openai key
+        diff providers need diff openai key
         """
         provider = self.llm.provider
         if provider == LLMProvider.OPENAI:
@@ -211,8 +228,7 @@ class Settings(BaseSettings):
             # Check if we have at least one search provider
             has_tavily = self.tavily_api_key is not None
             has_google = (
-                self.google_search_api_key is not None
-                and self.google_search_engine_id is not None
+                self.google_search_api_key is not None and self.google_search_engine_id is not None
             )
 
             if not has_tavily and not has_google:

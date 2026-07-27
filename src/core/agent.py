@@ -1,9 +1,14 @@
+import os
 from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
+import requests
+
+from core.memory import memory
 from llm.client import llm_client
 from utils.logger import log
+from utils.trace import publish_trace
 
 
 class AgentContext:
@@ -97,6 +102,9 @@ class BaseAgent(ABC):
                 if step_index > max_steps:
                     log.info(f"Stopping after {max_steps} (limit reached)")
                     break
+
+                publish_trace(self.name, f"Step {step_index}: {step[:100]}")
+
                 self.context.current_step = step_index
                 self.context.add_step(f"Executing step {step_index}: {step}")
 
@@ -104,6 +112,15 @@ class BaseAgent(ABC):
 
                     #ACT
                     result = self.execute_step(step)
+
+                    if result:
+                        summary = result.get("summary", f"Step {step_index} completed")
+                        memory.remember(
+                            content=f"{self.name}: {summary}",
+                            entry_type="step_result",
+                            metadata={"step": step, "step_index": step_index},
+                            tags=[self.name.lower(), "step"],
+                        )
 
                     #OBSERVE
                     self.context.add_result(result)
@@ -134,10 +151,12 @@ class BaseAgent(ABC):
             self.context.status = "completed"
             self.context.completed_at = datetime.now()
 
+            self._auto_save_report()
+
             return {
-                "status" : "success",
-                "result" : "",
-                "context" : self.context
+                "status": "success",
+                "result": self._synthesize_results(),
+                "context": self.context,
             }
 
         except Exception as e:
@@ -179,3 +198,86 @@ class BaseAgent(ABC):
             system_prompt=system_prompt,
             user_prompt=user_prompt
         )
+
+    def _auto_save_report(self) -> None:
+        """
+        Automatically save any report found in the agent's results.
+        This ensures reports are saved even if the agent stops early.
+        """
+        import os
+        from datetime import datetime
+
+        if not self.context:
+            return
+
+        # Look for a report in the results
+        report = None
+        filename = None
+
+        for result in self.context.results:
+            if isinstance(result, dict):
+                # Check for report in various forms
+                if result.get("report"):
+                    report = result["report"]
+                    break
+                elif result.get("polished_report"):
+                    report = result["polished_report"]
+                    break
+                elif result.get("content") and "report" in result.get("summary", "").lower():
+                    # Some agents store the report as content
+                    report = result["content"]
+                    break
+
+        # Also check if any result already has a filename (already saved)
+        for result in self.context.results:
+            if isinstance(result, dict) and result.get("filename"):
+                log.info(f"Report already saved: {result.get('filename')}")
+                return
+
+        # If we found a report, save it
+        if report:
+            try:
+                os.makedirs("reports", exist_ok=True)
+
+                # Generate filename from agent name and topic
+                topic = self.context.goal[:30].replace(" ", "_").replace("/", "_")
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                filename = f"report_{self.name}_{topic}_{timestamp}.md"
+                filepath = f"reports/{filename}"
+
+                with open(filepath, "w") as f:
+                    f.write(report)
+
+                log.info(f"✅ Auto-saved report to {filepath}")
+
+                # Add the filename to results so it can be accessed later
+                self.context.add_result(
+                    {
+                        "summary": f"Report auto-saved: {filename}",
+                        "filename": filename,
+                        "filepath": filepath,
+                        "report": report,
+                    }
+                )
+
+            except Exception as e:
+                log.error(f"Failed to auto-save report: {e}")
+        else:
+            # Check if there are any memories that might contain a report
+            # Some agents save reports to memory directly
+            pass
+
+    def _publish_trace(self, agent: str, action: str, content: str = ""):
+        """Publish a trace to the SSE stream."""
+        try:
+            # Get the current run_id from environment or context
+            run_id = os.environ.get("CURRENT_RUN_ID")
+            if run_id:
+                # Send to the SSE endpoint
+                requests.post(
+                    "http://localhost:5000/api/publish_trace",
+                    json={"run_id": run_id, "agent": agent, "action": action, "content": content},
+                    timeout=1,
+                )
+        except Exception:
+            pass  # Silently fail so it doesn't break the agent

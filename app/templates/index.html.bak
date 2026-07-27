@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CompetitorIntel</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-inner">
+                <h1 class="logo">competitor_intel</h1>
+                <div class="header-actions">
+                    <button class="btn btn-primary" id="btn-new-topic">+ New Topic</button>
+                    <button class="btn btn-outline" id="btn-refresh">Refresh</button>
+                    <span class="badge" id="scheduler-status">Scheduler: ON</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="container">
+                <div class="topics-grid" id="topics-container">
+                    <div class="loading">Loading topics...</div>
+                </div>
+
+                <!-- Trace Panel -->
+                <div class="trace-panel" id="trace-panel" style="display:none;">
+                    <div class="trace-header">
+                        <h3 id="trace-title">Running...</h3>
+                        <button class="btn btn-sm btn-outline" id="btn-close-trace">Close</button>
+                    </div>
+                    <div class="trace-body" id="trace-body">
+                        <div class="trace-placeholder">Waiting for trace data...</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- New Topic Modal -->
+        <div class="modal" id="topic-modal" style="display:none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-title">New Topic</h3>
+                    <button class="btn btn-sm btn-outline" id="btn-close-modal">Close</button>
+                </div>
+                <div class="modal-body">
+                    <form id="topic-form">
+                        <div class="form-group">
+                            <label for="topic-name">Topic Name</label>
+                            <input type="text" id="topic-name" placeholder="e.g., AI Customer Service Tools" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="topic-description">Description</label>
+                            <textarea id="topic-description" placeholder="Brief description of what to research"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="topic-search-terms">Search Terms (one per line)</label>
+                            <textarea id="topic-search-terms" placeholder="AI customer service tools 2026&#10;best AI chatbot for customer service"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="topic-urls">URLs to Analyze (one per line)</label>
+                            <textarea id="topic-urls" placeholder="https://zendesk.com&#10;https://intercom.com"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="topic-email">Email for Reports</label>
+                            <input type="email" id="topic-email" placeholder="your@email.com">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="topic-schedule-freq">Schedule Frequency</label>
+                                <select id="topic-schedule-freq">
+                                    <option value="">Manual Only</option>
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="hourly">Hourly</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="topic-schedule-time">Time (24hr)</label>
+                                <input type="time" id="topic-schedule-time" value="09:00">
+                            </div>
+                            <div class="form-group">
+                                <label for="topic-schedule-day">Day</label>
+                                <select id="topic-schedule-day">
+                                    <option value="monday">Monday</option>
+                                    <option value="tuesday">Tuesday</option>
+                                    <option value="wednesday">Wednesday</option>
+                                    <option value="thursday">Thursday</option>
+                                    <option value="friday">Friday</option>
+                                    <option value="saturday">Saturday</option>
+                                    <option value="sunday">Sunday</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline" id="btn-cancel-modal">Cancel</button>
+                    <button class="btn btn-primary" id="btn-save-topic">Save Topic</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

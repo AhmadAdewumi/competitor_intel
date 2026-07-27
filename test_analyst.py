@@ -61,7 +61,7 @@ print("\n--- Testing Analysis ---")
 goal = "Analyze the AI customer service tool market"
 print(f"Goal: {goal}")
 
-result = analyst.run(goal, max_steps=4)
+result = analyst.run(goal, max_steps=10)
 
 print(f"\n--- Result ---")
 print(f"Status: {result['status']}")

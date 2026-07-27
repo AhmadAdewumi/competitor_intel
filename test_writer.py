@@ -37,7 +37,7 @@ print("\n--- Testing Writing ---")
 goal = "Write a competitive analysis report on AI customer service tools"
 print(f"Goal: {goal}")
 
-result = writer.run(goal, max_steps=4)
+result = writer.run(goal, max_steps=10)
 
 print(f"\n--- Result ---")
 print(f"Status: {result['status']}")

@@ -105,8 +105,8 @@ class WriterAgent(BaseAgent):
             return self._execute_write(step)
 
         # Step 4: Edit
-        elif "edit" in step_lower or "polish" in step_lower:
-            return self._execute_edit(step)
+        # elif "edit" in step_lower or "polish" in step_lower:
+        #     return self._execute_edit(step)
 
         # Step 5: Save
         elif "save" in step_lower or "file" in step_lower:
@@ -124,7 +124,13 @@ class WriterAgent(BaseAgent):
         all_memories = memory.get_recent(limit=50)
 
         if not all_memories:
-            return {"summary": "No memories found to review", "error": "No data available"}
+            # HANDLE EMPTY MEMORY
+            log.warning("No memories found! Agents aren't saving data.")
+            return {
+                "summary": "No data available. The researcher and analyst agents need to save data first.",
+                "error": "No data in memory",
+                "content": "No research data available to write a report. Please run the Researcher and Analyst agents first.",
+            }
 
         # Categorize memories
         facts = [m for m in all_memories if m.type == "fact"]
@@ -188,6 +194,10 @@ class WriterAgent(BaseAgent):
         """
         Write the report.
         """
+        from src.utils.trace import publish_trace
+
+        publish_trace("Writer", "Starting to write report...")
+
         # Get the outline
         outline = self._get_last_outline()
         review = self._get_last_review()
@@ -210,13 +220,15 @@ class WriterAgent(BaseAgent):
 
         Outline:
         {outline if outline else "Use a standard report structure"}
-        
+
         Content:
         {review[:1500] if review else "No additional content provided"}
-        
+
         Write the complete report."""
 
         response = self.ask_llm(system_prompt, user_prompt)
+
+        publish_trace("Writer", "Report written", f"{len(response)} characters")
 
         return {"summary": "Report written", "report": response}
 
@@ -261,18 +273,16 @@ class WriterAgent(BaseAgent):
             return {"summary": "No report to save", "error": "No report found"}
 
         # Save to file
-        filename = f"report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
-        filepath = f"reports/{filename}"
-
-        # Create reports directory if needed
         import os
 
         os.makedirs("reports", exist_ok=True)
+        filename = f"report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
+        filepath = f"reports/{filename}"
 
         with open(filepath, "w") as f:
             f.write(final_report)
 
-        log.info(f"Report saved to {filepath}")
+        log.info(f"✅ Report saved to {filepath}")
 
         # Also save to memory
         memory.remember(
@@ -282,11 +292,13 @@ class WriterAgent(BaseAgent):
             tags=["report", "output"],
         )
 
+        # Return BOTH the summary AND the report
         return {
             "summary": f"Report saved to {filename}",
             "filename": filename,
             "filepath": filepath,
             "report": final_report,
+            "polished_report": final_report,
         }
 
     def _execute_general(self, step: str) -> Dict[str, Any]:
@@ -352,8 +364,12 @@ class WriterAgent(BaseAgent):
         if result.get("error"):
             return {"should_stop": False, "reason": "Error occurred but continuing"}
 
-        # Check if we've completed the main steps
-        if self.context and self.context.current_step >= 5:
-            return {"should_stop": True, "reason": "Writing completed"}
+        # Check if we have a report ready
+        report = self._get_last_report()
+        polished = self._get_last_polished()
+
+        # If we have a report and we've done at least 3 steps, we can stop
+        if (report or polished) and self.context and self.context.current_step >= 3:
+            return {"should_stop": True, "reason": "Report complete"}
 
         return {"should_stop": False, "reason": "Continuing writing"}

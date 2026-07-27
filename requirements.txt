@@ -72,3 +72,9 @@ playwright>=1.40.0
 # Report Generation
 markdown>=3.5.0
 jinja2>=3.1.0
+pyyaml>=6.0
+markdown>=3.5.0
+weasyprint>=60.0
+flask>=2.3.0
+flask-cors>=4.0.0
+flask-sse>=0.2.1schedule>=1.2.0

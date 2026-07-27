@@ -13,7 +13,8 @@ class LLMProvider(str, Enum):
 
     OLLAMA = "ollama",
     GROQ = "groq",
-    OPENAI = "openai"
+    OPENAI = "openai",
+    OPENROUTER = "openrouter"
 
 class LLMClient:
     """provider agnostic llm client"""
@@ -32,6 +33,8 @@ class LLMClient:
             self._init_openai()
         elif self.provider == LLMProvider.GROQ:
             self._init_groq()
+        elif self.provider == LLMProvider.OPENROUTER:
+            self._init_openrouter()
         else:
             raise ValueError(f"Unknown provider: {self.provider}")
 
@@ -39,11 +42,28 @@ class LLMClient:
 
     def get_default_provider(self) -> LLMProvider:
         """get the default provider from settings or environment"""
+        # Check database first
+        try:
+            from app.db import get_llm_provider
+
+            db_provider = get_llm_provider()
+            if db_provider:
+                provider_map = {
+                    "groq": LLMProvider.GROQ,
+                    "openrouter": LLMProvider.OPENROUTER,
+                }
+                if db_provider in provider_map:
+                    return provider_map[db_provider]
+        except Exception:
+            pass  # Database not available
+
+        if os.getenv("OPENROUTER_API_KEY"):
+            return LLMProvider.OPENROUTER
         if(os.getenv("GROQ_API_KEY")):
             return LLMProvider.GROQ
-        if(os.getenv("GROQ_API_KEY")):
-            return LLMProvider.OPENAI
-        return LLMProvider.OLLAMA
+        # if(os.getenv("GROQ_API_KEY")):
+        #     return LLMProvider.OPENAI
+        return LLMProvider.GROQ
 
     # OLLAMA INITIALIZATION
     def _init_ollama(self):
@@ -68,6 +88,22 @@ class LLMClient:
             log.error("Cannot connect to Ollama. Please ensure it's running.")
             log.error("Run: ollama serve")
 
+    def _init_openrouter(self):
+        """Initialize the OpenRouter client."""
+        self.api_key = os.getenv("OPENROUTER_API_KEY")
+
+        if not self.api_key:
+            raise ValueError("OPENROUTER_API_KEY not found in environment variables.")
+
+        # OpenRouter uses a simple HTTP API (no SDK needed)
+        # We'll use requests directly
+        self.base_url = "https://openrouter.ai/api/v1"
+        self.default_model = "google/gemma-4-31b-it:free"
+        # self.default_model = "nvidia/nemotron-3-super-120b-a12b:free"
+
+        log.info("OpenRouter client initialized successfully.")
+        log.info(f"Default model: {self.default_model}")
+
 
     def _init_groq(self):
         try:
@@ -81,7 +117,7 @@ class LLMClient:
                 timeout=settings.llm.timeout if hasattr(settings, 'llm') else 60,
                 max_retries=settings.llm.max_retries if hasattr(settings, 'llm') else 3,
             )
-            self.default_model = "mixtral-8x7b-32768"
+            self.default_model = "llama-3.3-70b-versatile"
             log.info("Groq client init successfully")
         except ImportError:
             log.error("Groq library not installed. Run: pip install openai")
@@ -128,6 +164,8 @@ class LLMClient:
             return self._chat_openai(messages, model, temperature, max_tokens, **kwargs)
         elif self.provider == LLMProvider.GROQ:
             return self._chat_groq(messages, model, temperature, max_tokens, **kwargs)
+        elif self.provider == LLMProvider.OPENROUTER:
+            return self._chat_openrouter(messages, model, temperature, max_tokens, **kwargs)
         else:
             raise ValueError(f"Unknown Provider: {self.provider}")
 
@@ -193,6 +231,63 @@ class LLMClient:
             log.error("Ollama requests timed out")
         except requests.exceptions.RequestException as e:
             log.error(f"Ollama request failed: {e}")
+            raise
+
+    def _chat_openrouter(
+        self,
+        messages: List[Dict[str, str]],
+        model: Optional[str] = None,
+        temperature: Optional[float] = None,
+        max_tokens: Optional[int] = None,
+        **kwargs,
+    ) -> str:
+        """Chat with OpenRouter (unified API, no rate limits)."""
+
+        model = model or self.default_model
+        temperature = temperature or 0.7
+        max_tokens = max_tokens or 4096
+
+        log.debug(f"OpenRouter Request - Model: {model}")
+        log.debug(f"Messages: {len(messages)}")
+
+        try:
+            response = requests.post(
+                f"{self.base_url}/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {self.api_key}",
+                    "Content-Type": "application/json",
+                    "HTTP-Referer": "https://competitorintel.local",  # Optional
+                    "X-Title": "CompetitorIntel",  # Optional
+                },
+                json={
+                    "model": model,
+                    "messages": messages,
+                    "temperature": temperature,
+                    "max_tokens": max_tokens,
+                    **kwargs,
+                },
+                timeout=60,
+            )
+
+            response.raise_for_status()
+            data = response.json()
+            content = data.get("choices", [{}])[0].get("message", {}).get("content", "")
+
+            log.debug(
+                f"OpenRouter Response: {content[:100]}..."
+                if len(content) > 100
+                else f"OpenRouter Response: {content}"
+            )
+            return content
+
+        except requests.exceptions.Timeout:
+            log.error("OpenRouter request timed out")
+            raise
+        except requests.exceptions.RequestException as e:
+            log.error(f"OpenRouter request failed: {e}")
+            raise
+        except Exception as e:
+            log.error(f"OpenRouter error: {e}")
             raise
 
     def _chat_groq(

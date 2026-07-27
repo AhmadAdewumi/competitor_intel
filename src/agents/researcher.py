@@ -1,5 +1,5 @@
 # src/agents/researcher.py
-
+import re
 # Researcher Agent#
 # Research topics by searching and scraping web pages.
 # Uses Search Tool + Scrape Tool to research.
@@ -7,10 +7,12 @@
 from typing import Any, Dict, List, Optional
 
 from src.core.agent import BaseAgent
+from src.core.memory import memory
 from src.tools.calculator import CalculatorTool
 from src.tools.scrape import ScrapeTool
 from src.tools.search import SearchTool
 from src.utils.logger import log
+from utils.trace import publish_trace
 
 
 class ResearcherAgent(BaseAgent):
@@ -137,33 +139,39 @@ class ResearcherAgent(BaseAgent):
     def _execute_search(self, step: str) -> Dict[str, Any]:
         """
         Execute a search step.
-
-        Extracts the search query from the step and performs the search.
         """
-        # Extract query from the step
-        # Try to find the query in quotes
-        import re #regex
 
         query_match = re.search(r'"([^"]*)"', step)
 
         if query_match:
             query = query_match.group(1)
         else:
-            # Use the whole step after "search"
             query = step.replace("Search", "").replace("for", "").replace("about", "").strip()
 
         log.info(f"Searching for: {query}")
+        publish_trace("Researcher", f'Searching: "{query}"')
 
         # Use the search tool
-        result = self.search_tool.run({"query": query, "max_results": 3})
+        result = self.search_tool.run({"query": query, "max_results": 2})
 
         if result["success"]:
+            for item in result["results"][:2]:
+                memory.remember(
+                    content=f"Found: {item.get('title', 'No title')} - {item.get('url', 'No URL')}",
+                    entry_type="research",
+                    metadata={"url": item.get("url"), "snippet": item.get("snippet", "")},
+                    tags=["search", "web"],
+                )
+
+            publish_trace("Researcher", f'Found {result["count"]} results for "{query}"')
+
             return {
                 "summary": f"Found {result['count']} results for '{query}'",
                 "results": result["results"],
                 "query": query,
             }
         else:
+            publish_trace("Researcher", f"Search failed: {result.get('error')}")
             return {
                 "summary": f"Search failed: {result.get('error', 'Unknown error')}",
                 "error": result.get("error"),
@@ -186,13 +194,20 @@ class ResearcherAgent(BaseAgent):
 
         # Scrape the top results
         scraped_pages = []
-        for result in search_results[:3]:
+        for result in search_results[:2]:
             url = result.get("url")
             if url:
                 log.info(f"Scraping: {url}")
                 scrape_result = self.scrape_tool.run({"url": url, "max_chars": 1500})
 
                 if scrape_result["success"]:
+                    memory.remember(
+                        content=f"Scraped: {scrape_result.get('title', 'No title')} - {scrape_result.get('content', '')[:200]}...",
+                        entry_type="fact",
+                        metadata={"url": url, "title": scrape_result.get("title")},
+                        tags=["scrape", "web"],
+                    )
+
                     scraped_pages.append(
                         {
                             "url": url,

@@ -1,0 +1,52 @@
+# topics.yaml
+# Define your research topics here
+
+topics:
+  - name: "AI Customer Service Tools"
+    description: "Research and analyze AI customer service tools market"
+    # Optional: specific search queries to use
+    search_terms:
+      - "AI customer service tools 2026"
+      - "best AI chatbot for customer service"
+      - "AI customer support market trends"
+    # Optional: specific URLs to scrape
+    urls:
+      - "https://www.zendesk.com/"
+      - "https://www.intercom.com/"
+    # Schedule (for future use)
+    schedule:
+      frequency: "weekly"        # daily, weekly, monthly, hourly
+      day: "monday"              # For weekly: monday, tuesday, etc.
+      time: "09:00"              # 24-hour format
+      timezone: "UTC"            # Optional
+    # Who to notify (for future use)
+    email: "ahmadadewumi@gmail.com"
+
+  - name: "AI Competitor Intel"
+    description: "Monitor key competitors in AI space"
+    search_terms:
+      - "OpenAI announcements"
+      - "Anthropic product updates"
+      - "Google Gemini news"
+    schedule:
+      frequency: "daily"
+      time: "08:30"
+    email: "ahmadadewumi@gmail.com"
+
+  - name: "Industry Trends: Customer Service"
+    description: "Latest trends in customer service technology"
+    search_terms:
+      - "customer service trends 2026"
+      - "AI in customer support"
+    schedule:
+      frequency: "hourly"
+      interval: 6
+    email: "ahmadadewumi@gmail.com"
+
+  - name: "Custom Schedule"
+    description: "Example with custom schedule"
+    schedule:
+      frequency: "weekly"
+      day: "friday"
+      time: "14:30"
+    email: "ahmadadewumi@gmail.com"
