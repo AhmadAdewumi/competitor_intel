@@ -13,7 +13,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="51" />
+    <option name="cachedIndexableFilesCount" value="96" />
   </component>
   <component name="FlaskConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform)); sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo, NoAppException&#10;for module in [&quot;main.py&quot;, &quot;wsgi.py&quot;, &quot;app.py&quot;]:&#10;    try: locals().update(ScriptInfo(app_import_path=module, create_app=None).load_app().make_shell_context()); print(&quot;\nFlask App: %s&quot; % app.import_name); break&#10;    except NoAppException: pass">
     <envs>
@@ -43,61 +43,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0000044124336753" />
-      <entry key="MS500" value="1.1016732239028102" />
-      <entry key="S2" value="2.368555149146135" />
-      <entry key="S5" value="3.8674584164792805" />
-      <entry key="S10" value="5.274025772451413" />
-      <entry key="S30" value="9.259486424230225" />
-      <entry key="S60" value="14.85153799882943" />
-      <entry key="M2" value="25.41736415800758" />
-      <entry key="M5" value="43.06853711201459" />
-      <entry key="M10" value="60.443557342409996" />
-      <entry key="M15" value="77.92553710661042" />
-      <entry key="M30" value="139.21531063307256" />
-      <entry key="H1" value="276.1753182477861" />
-      <entry key="H2" value="500.5789989476335" />
-      <entry key="H4" value="761.7058749703345" />
-      <entry key="D1" value="1197.5126845757452" />
-      <entry key="W1" value="1309.7817227826765" />
+      <entry key="MS100" value="1.0000045882209063" />
+      <entry key="MS500" value="1.161784071545068" />
+      <entry key="S2" value="4.329161871555167" />
+      <entry key="S5" value="12.536136917112653" />
+      <entry key="S10" value="21.234799397995396" />
+      <entry key="S30" value="32.79463455361438" />
+      <entry key="S60" value="40.64679028096198" />
+      <entry key="M2" value="55.252028289614344" />
+      <entry key="M5" value="86.36986369190718" />
+      <entry key="M10" value="114.93261412979406" />
+      <entry key="M15" value="136.9143659624378" />
+      <entry key="M30" value="202.17476519838118" />
+      <entry key="H1" value="340.431744835306" />
+      <entry key="H2" value="566.9638163268694" />
+      <entry key="H4" value="831.9634019743239" />
+      <entry key="D1" value="1276.458226170271" />
+      <entry key="W1" value="1391.304924839348" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="0.002355093413458517" />
-      <entry key="MS500" value="0.29812721980856266" />
-      <entry key="S2" value="0.7453705436259204" />
-      <entry key="S5" value="1.018967224166136" />
-      <entry key="S10" value="1.30591151803582" />
-      <entry key="S30" value="1.7019942928661216" />
-      <entry key="S60" value="1.9577243689512325" />
-      <entry key="M2" value="2.409029870823866" />
-      <entry key="M5" value="3.1230921589788228" />
-      <entry key="M10" value="3.8569455953381304" />
-      <entry key="M15" value="5.300060319267452" />
-      <entry key="M30" value="16.211177934095975" />
-      <entry key="H1" value="50.49745168127183" />
-      <entry key="H2" value="111.18522103037125" />
-      <entry key="H4" value="182.0947801776964" />
-      <entry key="D1" value="298.2438998842998" />
-      <entry key="W1" value="327.7111280772511" />
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="2.2384216899619026E-188" />
+      <entry key="S2" value="1.2338355938195852E-47" />
+      <entry key="S5" value="1.975669258958599E-19" />
+      <entry key="S10" value="5.750303484414511E-10" />
+      <entry key="S30" value="0.001294842972434405" />
+      <entry key="S60" value="0.05399841957351618" />
+      <entry key="M2" value="0.4000892995153375" />
+      <entry key="M5" value="1.5230378641051754" />
+      <entry key="M10" value="2.6934347758185804" />
+      <entry key="M15" value="4.171793269382577" />
+      <entry key="M30" value="14.382538857656549" />
+      <entry key="H1" value="47.56417343298772" />
+      <entry key="H2" value="107.90766863156287" />
+      <entry key="H4" value="179.39078060392634" />
+      <entry key="D1" value="297.5011668436695" />
+      <entry key="W1" value="327.5944153247186" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.052591523018464564" />
-      <entry key="MS500" value="0.7457716647402641" />
-      <entry key="S2" value="2.755218787038315" />
-      <entry key="S5" value="4.681180580795218" />
-      <entry key="S10" value="6.441075453463678" />
-      <entry key="S30" value="10.885469375428212" />
-      <entry key="S60" value="16.750948864538806" />
-      <entry key="M2" value="27.779261993888795" />
-      <entry key="M5" value="46.162036259773764" />
-      <entry key="M10" value="64.28141960751068" />
-      <entry key="M15" value="83.20933823150803" />
-      <entry key="M30" value="155.4071710745389" />
-      <entry key="H1" value="326.6455250071781" />
-      <entry key="H2" value="611.7346794353465" />
-      <entry key="H4" value="943.7764589347959" />
-      <entry key="D1" value="1495.7499569518843" />
-      <entry key="W1" value="1637.4918096719086" />
+      <entry key="MS100" value="0.10511539885714163" />
+      <entry key="MS500" value="0.7498004603986836" />
+      <entry key="S2" value="4.041982018138449" />
+      <entry key="S5" value="12.342049243398389" />
+      <entry key="S10" value="21.09834572157754" />
+      <entry key="S30" value="32.730284141718606" />
+      <entry key="S60" value="40.656682029539546" />
+      <entry key="M2" value="55.613893589794486" />
+      <entry key="M5" value="87.86096388521102" />
+      <entry key="M10" value="117.6025507428513" />
+      <entry key="M15" value="141.06620959206202" />
+      <entry key="M30" value="216.53638854854609" />
+      <entry key="H1" value="387.96831390640324" />
+      <entry key="H2" value="674.8418304060585" />
+      <entry key="H4" value="1011.3298497534186" />
+      <entry key="D1" value="1573.9526988675432" />
+      <entry key="W1" value="1718.898287457187" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -112,28 +112,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Python.settings.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/ahmad/PYTHON PROJECTS/competitor_intel&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.settings.executor": "Run",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/home/ahmad/PYTHON PROJECTS/competitor_intel",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Python.settings">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="competitor_intel" />
@@ -229,6 +231,7 @@
       <workItem from="1783591237973" duration="3655000" />
       <workItem from="1783598783806" duration="24753000" />
       <workItem from="1785168910564" duration="333000" />
+      <workItem from="1785170733806" duration="744000" />
     </task>
     <servers />
   </component>

@@ -4,7 +4,7 @@ from typing import Dict, List, Optional
 
 import requests
 
-from config import settings
+from src.config import settings
 from src.utils.logger import log
 
 
