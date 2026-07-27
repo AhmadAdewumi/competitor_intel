@@ -270,12 +270,16 @@ class BaseAgent(ABC):
     def _publish_trace(self, agent: str, action: str, content: str = ""):
         """Publish a trace to the SSE stream."""
         try:
-            # Get the current run_id from environment or context
             run_id = os.environ.get("CURRENT_RUN_ID")
             if run_id:
-                # Send to the SSE endpoint
+                # Get the endpoint from environment
+                endpoint = os.environ.get("TRACE_ENDPOINT")
+                if not endpoint:
+                    base_url = os.environ.get("BASE_URL", "http://localhost:5000")
+                    endpoint = f"{base_url}/api/publish_trace"
+
                 requests.post(
-                    "http://localhost:5000/api/publish_trace",
+                    endpoint,
                     json={"run_id": run_id, "agent": agent, "action": action, "content": content},
                     timeout=1,
                 )

@@ -3,15 +3,21 @@
 # COMPETITORINTEL - Web Application Runner
 # ============================================
 
+import os
 from app import create_app
 
 app = create_app()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
+    # Use environment variables for production
+    debug = os.environ.get("DEBUG", "False").lower() == "true"
+    port = int(os.environ.get("PORT", 5000))
+    host = os.environ.get("HOST", "0.0.0.0")
+
     print("========================================")
     print("  CompetitorIntel Web Dashboard")
     print("========================================")
-    print("  Open: http://localhost:5000")
+    print(f"  Running on: http://{host}:{port}")
     print("  Press Ctrl+C to stop")
     print("========================================")
-    app.run(host='0.0.0.0', port=5000, debug=True, threaded=True)
+    app.run(host=host, port=port, debug=debug, threaded=True)
