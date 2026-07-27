@@ -1,9 +1,9 @@
 # src/agents/researcher.py
 import re
+
 # Researcher Agent#
 # Research topics by searching and scraping web pages.
 # Uses Search Tool + Scrape Tool to research.
-
 from typing import Any, Dict, List, Optional
 
 from src.core.agent import BaseAgent
@@ -12,7 +12,7 @@ from src.tools.calculator import CalculatorTool
 from src.tools.scrape import ScrapeTool
 from src.tools.search import SearchTool
 from src.utils.logger import log
-from utils.trace import publish_trace
+from src.utils.trace import publish_trace
 
 
 class ResearcherAgent(BaseAgent):

@@ -1,11 +1,12 @@
 # src/agents/analyst.py
 # Analyst Agent
 import os
+
 # : Analyze researched data and draw conclusions.
 # Raw data is useless without analysis, Reads memory, analyzes patterns, saves insights.
 # ============================================
+from typing import Any, Dict, List, Optional
 
-from typing import Dict, Any, List, Optional
 from src.core.agent import BaseAgent
 from src.core.memory import memory
 from src.tools.calculator import CalculatorTool
