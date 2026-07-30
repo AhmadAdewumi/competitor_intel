@@ -35,13 +35,16 @@ def publish(run_id: str, event_type: str, data: Dict[str, Any]):
 
 
 def sse_stream(run_id: str):
+    """Stream events for a specific run with keep-alive pings."""
     q = subscribe(run_id)
     try:
         while True:
             try:
-                event = q.get(timeout=600)
+                # Lower timeout to 30 seconds to beat Render's 100s idle limit
+                event = q.get(timeout=30)
                 yield f"data: {json.dumps(event)}\n\n"
             except queue.Empty:
+                # Send ping to keep connection alive
                 yield f"data: {json.dumps({'type': 'ping'})}\n\n"
     except GeneratorExit:
         unsubscribe(run_id)

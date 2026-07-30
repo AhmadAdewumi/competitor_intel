@@ -1,4 +1,5 @@
 import os
+import time
 from enum import Enum
 from typing import Dict, List, Optional
 
@@ -11,22 +12,23 @@ from src.utils.logger import log
 class LLMProvider(str, Enum):
     """Available LLM providers"""
 
-    OLLAMA = "ollama",
-    GROQ = "groq",
-    OPENAI = "openai",
+    OLLAMA = ("ollama",)
+    GROQ = ("groq",)
+    OPENAI = ("openai",)
     OPENROUTER = "openrouter"
+
 
 class LLMClient:
     """provider agnostic llm client"""
 
     def __init__(self, provider: Optional[LLMProvider] = None):
-        """"init the llm client"""
+        """ "init the llm client"""
 
         self.provider = provider or self.get_default_provider()
 
         log.info(f"LLM client initialized with provider: {self.provider}")
 
-        #init the appropriate provider
+        # init the appropriate provider
         if self.provider == LLMProvider.OLLAMA:
             self._init_ollama()
         elif self.provider == LLMProvider.OPENAI:
@@ -37,8 +39,6 @@ class LLMClient:
             self._init_openrouter()
         else:
             raise ValueError(f"Unknown provider: {self.provider}")
-
-
 
     def get_default_provider(self) -> LLMProvider:
         """get the default provider from settings or environment"""
@@ -59,7 +59,7 @@ class LLMClient:
 
         if os.getenv("OPENROUTER_API_KEY"):
             return LLMProvider.OPENROUTER
-        if(os.getenv("GROQ_API_KEY")):
+        if os.getenv("GROQ_API_KEY"):
             return LLMProvider.GROQ
         # if(os.getenv("GROQ_API_KEY")):
         #     return LLMProvider.OPENAI
@@ -72,7 +72,7 @@ class LLMClient:
         self.default_model = "qwen2:7b"
 
         try:
-            response = requests.get(f"{self.base_url}/api/tags", timeout = 20)
+            response = requests.get(f"{self.base_url}/api/tags", timeout=20)
             if response.status_code == 200:
                 models = response.json().get("models", [])
                 model_names = [m.get("name") for m in models]
@@ -98,12 +98,11 @@ class LLMClient:
         # OpenRouter uses a simple HTTP API (no SDK needed)
         # We'll use requests directly
         self.base_url = "https://openrouter.ai/api/v1"
-        self.default_model = "google/gemma-4-31b-it:free"
+        self.default_model = "openrouter/free"
         # self.default_model = "nvidia/nemotron-3-super-120b-a12b:free"
 
         log.info("OpenRouter client initialized successfully.")
         log.info(f"Default model: {self.default_model}")
-
 
     def _init_groq(self):
         try:
@@ -114,8 +113,8 @@ class LLMClient:
                 raise ValueError("GROQ_API_KEY not found in env vars")
             self.client = Groq(
                 api_key=api_key,
-                timeout=settings.llm.timeout if hasattr(settings, 'llm') else 60,
-                max_retries=settings.llm.max_retries if hasattr(settings, 'llm') else 3,
+                timeout=settings.llm.timeout if hasattr(settings, "llm") else 60,
+                max_retries=settings.llm.max_retries if hasattr(settings, "llm") else 3,
             )
             self.default_model = "llama-3.3-70b-versatile"
             log.info("Groq client init successfully")
@@ -135,8 +134,8 @@ class LLMClient:
                 raise ValueError("OPENAI_API_KEY not found in env vars")
             self.client = OpenAI(
                 api_key=api_key,
-                timeout=settings.llm.timeout if hasattr(settings, 'llm') else 60,
-                max_retries=settings.llm.max_retries if hasattr(settings, 'llm') else 3,
+                timeout=settings.llm.timeout if hasattr(settings, "llm") else 60,
+                max_retries=settings.llm.max_retries if hasattr(settings, "llm") else 3,
             )
             self.default_model = "gpt_4o_mini"
             log.info("OpenAI client init successfully")
@@ -147,14 +146,13 @@ class LLMClient:
             log.error(f"Failed to initialize openAI: {e}")
             raise
 
-
     def chat(
         self,
         messages: List[Dict[str, str]],
         model: Optional[str] = None,
         temperature: Optional[float] = None,
         max_tokens: Optional[int] = None,
-        **kwargs
+        **kwargs,
     ) -> str:
         """send a chat request to the LLM"""
 
@@ -171,14 +169,14 @@ class LLMClient:
 
     # OLLAMA CHAT IMPLEMENTATION
     def _chat_ollama(
-            self,
-            messages: List[Dict[str, str]],
-            model: Optional[str] = None,
-            temperature: Optional[float] = None,
-            max_tokens: Optional[int] = None,
-            **kwargs
+        self,
+        messages: List[Dict[str, str]],
+        model: Optional[str] = None,
+        temperature: Optional[float] = None,
+        max_tokens: Optional[int] = None,
+        **kwargs,
     ) -> str:
-        """ chat with ollama local"""
+        """chat with ollama local"""
         model = model or self.default_model
         temperature = temperature or 0.7
         max_tokens = max_tokens or 2048
@@ -208,20 +206,25 @@ class LLMClient:
         try:
             response = requests.post(
                 f"{self.base_url}/api/generate",
-                json = {
+                json={
                     "model": model,
                     "prompt": prompt,
                     "temperature": temperature,
                     "max_tokens": max_tokens,
                     "stream": False,
-                    **kwargs
-                }, timeout=600
+                    **kwargs,
+                },
+                timeout=600,
             )
             response.raise_for_status()
             result = response.json()
             content = result.get("response", "")
 
-            log.debug(f"Ollama Response: {content[:100]}..." if len(content) > 100 else f"Ollama Response: {content}")
+            log.debug(
+                f"Ollama Response: {content[:100]}..."
+                if len(content) > 100
+                else f"Ollama Response: {content}"
+            )
             return content
 
         except requests.exceptions.ConnectionError:
@@ -233,62 +236,55 @@ class LLMClient:
             log.error(f"Ollama request failed: {e}")
             raise
 
-    def _chat_openrouter(
-        self,
-        messages: List[Dict[str, str]],
-        model: Optional[str] = None,
-        temperature: Optional[float] = None,
-        max_tokens: Optional[int] = None,
-        **kwargs,
-    ) -> str:
-        """Chat with OpenRouter (unified API, no rate limits)."""
+    def _chat_openrouter(self, messages, model=None, temperature=None, max_tokens=None, **kwargs):
+        """Chat with OpenRouter using auto-router to avoid rate limits."""
 
         model = model or self.default_model
         temperature = temperature or 0.7
         max_tokens = max_tokens or 4096
 
-        log.debug(f"OpenRouter Request - Model: {model}")
-        log.debug(f"Messages: {len(messages)}")
+        # Retry logic for 429 errors
+        max_retries = 3
+        for attempt in range(max_retries + 1):
+            try:
+                response = requests.post(
+                    f"{self.base_url}/chat/completions",
+                    headers={
+                        "Authorization": f"Bearer {self.api_key}",
+                        "Content-Type": "application/json",
+                        "HTTP-Referer": "https://competitor-intel-rqxc.onrender.com",
+                        "X-Title": "CompetitorIntel",
+                    },
+                    json={
+                        "model": model,
+                        "messages": messages,
+                        "temperature": temperature,
+                        "max_tokens": max_tokens,
+                        **kwargs,
+                    },
+                    timeout=60,
+                )
 
-        try:
-            response = requests.post(
-                f"{self.base_url}/chat/completions",
-                headers={
-                    "Authorization": f"Bearer {self.api_key}",
-                    "Content-Type": "application/json",
-                    "HTTP-Referer": "https://competitorintel.local",  # Optional
-                    "X-Title": "CompetitorIntel",  # Optional
-                },
-                json={
-                    "model": model,
-                    "messages": messages,
-                    "temperature": temperature,
-                    "max_tokens": max_tokens,
-                    **kwargs,
-                },
-                timeout=60,
-            )
+                if response.status_code == 429:
+                    if attempt < max_retries:
+                        delay = 2**attempt
+                        log.warning(
+                            f"Rate limit hit, retrying in {delay}s (attempt {attempt + 1}/{max_retries})"
+                        )
+                        time.sleep(delay)
+                        continue
+                    else:
+                        raise Exception("Rate limit exceeded after all retries")
 
-            response.raise_for_status()
-            data = response.json()
-            content = data.get("choices", [{}])[0].get("message", {}).get("content", "")
+                response.raise_for_status()
+                data = response.json()
+                content = data.get("choices", [{}])[0].get("message", {}).get("content", "")
+                return content
 
-            log.debug(
-                f"OpenRouter Response: {content[:100]}..."
-                if len(content) > 100
-                else f"OpenRouter Response: {content}"
-            )
-            return content
-
-        except requests.exceptions.Timeout:
-            log.error("OpenRouter request timed out")
-            raise
-        except requests.exceptions.RequestException as e:
-            log.error(f"OpenRouter request failed: {e}")
-            raise
-        except Exception as e:
-            log.error(f"OpenRouter error: {e}")
-            raise
+            except requests.exceptions.RequestException as e:
+                if attempt < max_retries and "429" in str(e):
+                    continue
+                raise
 
     def _chat_groq(
         self,
@@ -298,7 +294,7 @@ class LLMClient:
         max_tokens: Optional[int] = None,
         **kwargs,
     ) -> str:
-        """Chat with Groq """
+        """Chat with Groq"""
 
         model = model or self.default_model
         temperature = temperature or 0.7
@@ -400,7 +396,8 @@ class LLMClient:
             messages=messages, model=model, temperature=temperature, max_tokens=max_tokens
         )
 
-#SINGLETON INSTANCE
+
+# SINGLETON INSTANCE
 llm_client = LLMClient()
 
 # TEST CODE

@@ -1,1 +1,1 @@
-web: gunicorn run_web:app --timeout 600 --workers 2
+web: gunicorn -k gevent --worker-connections 1000 --timeout 600 "run_web:app"

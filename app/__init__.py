@@ -273,16 +273,17 @@ def create_app():
     # SSE STREAM
     # ============================================
 
-    @app.route('/api/stream/<run_id>')
+    @app.route("/api/stream/<run_id>")
     def api_stream(run_id):
         """SSE endpoint for traces."""
         return Response(
             stream_with_context(sse_stream(run_id)),
-            mimetype='text/event-stream',
+            mimetype="text/event-stream",
             headers={
-                'Cache-Control': 'no-cache',
-                'X-Accel-Buffering': 'no'
-            }
+                "Cache-Control": "no-cache",
+                "X-Accel-Buffering": "no",  # Disable nginx buffering
+                "Connection": "keep-alive",
+            },
         )
 
     # ============================================
