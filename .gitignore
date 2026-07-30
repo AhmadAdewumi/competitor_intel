@@ -111,3 +111,30 @@ ehthumbs.db
 
 .env
 .idea
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Logs
+logs/
+*.log
+
+# Memory/data
+memory.json
+data/
+*.db
+*.sqlite3
+
+# IDE
+.vscode/
+*.swp
+*.swo
