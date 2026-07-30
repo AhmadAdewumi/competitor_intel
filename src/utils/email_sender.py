@@ -1,46 +1,37 @@
 # src/utils/email_sender.py
 # ============================================
-# COMPETITORINTEL - Email Sender
-# ============================================
-#
-# PURPOSE: Send reports via email
-# NOTE: Uses Gmail SMTP (free) or can be configured for other providers
+# COMPETITORINTEL - Email Sender (SendGrid Only)
 # ============================================
 
 import os
-import smtplib
-from email import encoders
-from email.mime.base import MIMEBase
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from typing import List, Optional
+from typing import List
 
 from src.utils.logger import log
+
+try:
+    from sendgrid import SendGridAPIClient
+    from sendgrid.helpers.mail import Mail
+    HAS_SENDGRID = True
+except ImportError:
+    HAS_SENDGRID = False
+    log.warning("SendGrid not installed. Email sending disabled.")
 
 
 class EmailSender:
     """
-    Send emails with report attachments.
-
-    Uses Gmail SMTP by default. Configure via environment variables:
-    - EMAIL_SENDER: Your email address
-    - EMAIL_PASSWORD: Your app password (not your regular password)
-    - EMAIL_SMTP: SMTP server (default: smtp.gmail.com)
-    - EMAIL_PORT: SMTP port (default: 587)
+    Send emails with report attachments using SendGrid API.
     """
 
     def __init__(self):
+        self.enabled = False
         self.sender = os.getenv("EMAIL_SENDER")
-        self.password = os.getenv("EMAIL_PASSWORD")
-        self.smtp_server = os.getenv("EMAIL_SMTP", "smtp.gmail.com")
-        self.smtp_port = int(os.getenv("EMAIL_PORT", 587))
+        self.api_key = os.getenv("SENDGRID_API_KEY")
 
-        if not self.sender or not self.password:
-            log.warning("Email credentials not configured. Email sending disabled.")
-            self.enabled = False
-        else:
+        if self.sender and self.api_key and HAS_SENDGRID:
             self.enabled = True
             log.info(f"Email sender configured: {self.sender}")
+        else:
+            log.warning("Email sender not configured. Set SENDGRID_API_KEY and EMAIL_SENDER")
 
     def send_report(
         self,
@@ -51,60 +42,34 @@ class EmailSender:
         html_body: str = None,
     ) -> bool:
         """
-        Send a report via email.
-
-        Args:
-            to_email: Recipient email address
-            subject: Email subject
-            body: Plain text body
-            attachments: List of file paths to attach
-            html_body: HTML version of the body (optional)
-
-        Returns:
-            True if successful
+        Send a report via email using SendGrid.
         """
         if not self.enabled:
-            log.warning("Email sending disabled. Configure EMAIL_SENDER and EMAIL_PASSWORD.")
+            log.warning("Email disabled. Configure SENDGRID_API_KEY and EMAIL_SENDER.")
             return False
 
         try:
-            msg = MIMEMultipart("alternative")
-            msg["Subject"] = subject
-            msg["From"] = self.sender
-            msg["To"] = to_email
-
-            # Plain text version
-            msg.attach(MIMEText(body, "plain"))
-
-            # HTML version if provided
+            message = Mail(
+                from_email=self.sender,
+                to_emails=to_email,
+                subject=subject,
+                plain_text_content=body
+            )
             if html_body:
-                msg.attach(MIMEText(html_body, "html"))
+                message.html_content = html_body
 
-            # Attach files
-            if attachments:
-                for filepath in attachments:
-                    if os.path.exists(filepath):
-                        with open(filepath, "rb") as f:
-                            part = MIMEBase("application", "octet-stream")
-                            part.set_payload(f.read())
-                            encoders.encode_base64(part)
-                            filename = os.path.basename(filepath)
-                            part.add_header(
-                                "Content-Disposition", f'attachment; filename="{filename}"'
-                            )
-                            msg.attach(part)
+            sg = SendGridAPIClient(self.api_key)
+            response = sg.send(message)
 
-            # Send email
-            with smtplib.SMTP(self.smtp_server, self.smtp_port) as server:
-                server.starttls()
-                server.login(self.sender, self.password)
-                server.send_message(msg)
-
-            log.info(f"✅ Email sent to {to_email}")
-            return True
+            if response.status_code == 202:
+                log.info(f"✅ Email sent to {to_email}")
+                return True
+            else:
+                log.error(f"Email failed with status: {response.status_code}")
+                return False
 
         except Exception as e:
-            log.error(f"Failed to send email: {e}")
+            log.error(f"Email error: {e}")
             return False
 
 
@@ -121,18 +86,8 @@ def send_report_email(
 ) -> bool:
     """
     Convenience function to send a report email.
-
-    Args:
-        to_email: Recipient email
-        topic_name: Topic name (used in subject)
-        report_content: Report content (markdown)
-        report_paths: List of file paths to attach
-        html_content: HTML version of the report
-
-    Returns:
-        True if successful
     """
-    subject = f"📊 Research Report: {topic_name}"
+    subject = f"Research Report: {topic_name}"
 
     # Plain text body
     body = f"""
@@ -142,7 +97,7 @@ Generated by CompetitorIntel
 The report has been attached to this email.
 
 ---
-CompetitorIntel - AI-Powered Competitive Intelligence
+CompetitorIntel - AI-Powered Competitive Intelligence Analyst
 """
 
     return email_sender.send_report(

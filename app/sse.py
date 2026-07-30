@@ -39,7 +39,7 @@ def sse_stream(run_id: str):
     try:
         while True:
             try:
-                event = q.get(timeout=30)
+                event = q.get(timeout=600)
                 yield f"data: {json.dumps(event)}\n\n"
             except queue.Empty:
                 yield f"data: {json.dumps({'type': 'ping'})}\n\n"

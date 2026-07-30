@@ -220,6 +220,7 @@ def create_app():
                 except:
                     pass
 
+            response.call_on_close(cleanup)
             return response
 
         else:
