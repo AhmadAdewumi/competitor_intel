@@ -1,16 +1,17 @@
 # src/utils/email_sender.py
 # ============================================
-# COMPETITORINTEL - Email Sender (SendGrid Only)
+# COMPETITORINTEL - Email Sender (SendGrid with Attachments)
 # ============================================
 
 import os
-from typing import List
-
+import base64
+from typing import List, Optional
 from src.utils.logger import log
 
 try:
     from sendgrid import SendGridAPIClient
-    from sendgrid.helpers.mail import Mail
+    from sendgrid.helpers.mail import Mail, Attachment, FileContent, FileName, FileType, Disposition
+
     HAS_SENDGRID = True
 except ImportError:
     HAS_SENDGRID = False
@@ -42,7 +43,7 @@ class EmailSender:
         html_body: str = None,
     ) -> bool:
         """
-        Send a report via email using SendGrid.
+        Send a report via email using SendGrid with attachments.
         """
         if not self.enabled:
             log.warning("Email disabled. Configure SENDGRID_API_KEY and EMAIL_SENDER.")
@@ -50,13 +51,27 @@ class EmailSender:
 
         try:
             message = Mail(
-                from_email=self.sender,
-                to_emails=to_email,
-                subject=subject,
-                plain_text_content=body
+                from_email=self.sender, to_emails=to_email, subject=subject, plain_text_content=body
             )
             if html_body:
                 message.html_content = html_body
+
+            # Add attachments if provided
+            if attachments:
+                for filepath in attachments:
+                    if os.path.exists(filepath):
+                        with open(filepath, "rb") as f:
+                            data = f.read()
+                            encoded = base64.b64encode(data).decode()
+
+                            attachment = Attachment(
+                                FileContent(encoded),
+                                FileName(os.path.basename(filepath)),
+                                FileType("application/octet-stream"),
+                                Disposition("attachment"),
+                            )
+                            message.attachment = attachment
+                            log.debug(f"Attached: {filepath}")
 
             sg = SendGridAPIClient(self.api_key)
             response = sg.send(message)

@@ -3,11 +3,9 @@
 # COMPETITORINTEL - Flask Application
 # ============================================
 
-import json
 import os
 import threading
 from datetime import datetime
-from pathlib import Path
 
 from flask import (
     Flask,
@@ -19,6 +17,8 @@ from flask import (
     stream_with_context,
 )
 from flask_cors import CORS
+
+from src.utils.logger import log
 
 # Import database functions
 from .db import (
@@ -154,28 +154,40 @@ def create_app():
     @app.route("/api/topics/<int:topic_id>/report")
     def api_download_report(topic_id):
         """Download a report for a topic."""
+        import glob
         import os
         import tempfile
-        from flask import send_file, Response
         from datetime import datetime
 
-        # Get the latest report for this topic
+        from flask import Response, send_file
+
+        # FIRST: Try to get from database
         reports = get_reports_for_topic(topic_id, 1)
-        if not reports:
-            return jsonify({"error": "No report found for this topic"}), 404
 
-        report = reports[0]
-        format_type = request.args.get("format", "md")
-
-        # Get the report content
-        content = report.get("content", "")
-        if not content:
-            return jsonify({"error": "Report content is empty"}), 404
-
-        # Get topic name for filename
+        content = None
+        topic_name = None
         topic = get_topic(topic_id)
         topic_name = topic.get("name", "report") if topic else "report"
         safe_name = topic_name.lower().replace(" ", "_").replace("/", "_")
+
+        if reports:
+            report = reports[0]
+            content = report.get("content", "")
+
+        # SECOND: If not in database, look for files in reports/ folder
+        if not content:
+            # Find the most recent report file for this topic
+            report_files = glob.glob(f"reports/{safe_name}*.md")
+            if report_files:
+                latest = max(report_files, key=os.path.getmtime)
+                with open(latest, "r") as f:
+                    content = f.read()
+                    log.info(f"Found report file: {latest}")
+
+        if not content:
+            return jsonify({"error": "No report found for this topic"}), 404
+
+        format_type = request.args.get("format", "md")
         date_str = datetime.now().strftime("%Y%m%d")
 
         # Generate different formats
@@ -213,7 +225,6 @@ def create_app():
             response = send_file(tmp_path, as_attachment=True, download_name=filename)
 
             # Clean up temp file after sending
-            @response.call_on_close
             def cleanup():
                 try:
                     os.unlink(tmp_path)
