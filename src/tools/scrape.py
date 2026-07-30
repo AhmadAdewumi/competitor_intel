@@ -4,8 +4,8 @@ import requests
 from bs4 import BeautifulSoup
 from oauthlib.oauth2.rfc6749 import parameters
 
-from core.tool import BaseTool
-from utils.logger import log
+from src.core.tool import BaseTool
+from src.utils.logger import log
 
 
 class ScrapeTool(BaseTool):

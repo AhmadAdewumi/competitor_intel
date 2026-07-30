@@ -4,8 +4,8 @@ from typing import Dict, Any
 
 import requests
 
-from core.tool import BaseTool
-from utils.logger import log
+from src.core.tool import BaseTool
+from src.utils.logger import log
 
 
 class SearchTool(BaseTool):
