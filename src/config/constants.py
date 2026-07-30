@@ -8,22 +8,22 @@ class AgentLimits:
     """Centralized limits for all agents."""
 
     # Orchestrator
-    ORCHESTRATOR_MAX_STEPS = 10
+    ORCHESTRATOR_MAX_STEPS = 5
 
     # Researcher
-    RESEARCHER_MAX_STEPS = 10
+    RESEARCHER_MAX_STEPS = 5
 
     # Analyst
-    ANALYST_MAX_STEPS = 10
+    ANALYST_MAX_STEPS = 5
 
     # Writer
-    WRITER_MAX_STEPS = 15
+    WRITER_MAX_STEPS = 4
 
     # Topic Runner
-    RUNNER_MAX_STEPS = 10
+    RUNNER_MAX_STEPS = 5
 
     # Search
-    SEARCH_MAX_RESULTS = 2
+    SEARCH_MAX_RESULTS = 3
 
 
 class ReportSettings:
