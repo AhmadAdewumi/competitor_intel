@@ -2,15 +2,17 @@
 # COMPETITORINTEL - Writer Agent
 #
 # Write professional reports from researched data.
-#So that Raw data and analysis need to be presented clearly.
+# So that Raw data and analysis need to be presented clearly.
 # It reads memory and writes structured reports.
 # ============================================
-import datetime
+import os
+from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from src.core.agent import BaseAgent
 from src.core.memory import memory
 from src.utils.logger import log
+from src.utils.trace import publish_trace
 
 
 class WriterAgent(BaseAgent):
@@ -35,52 +37,19 @@ class WriterAgent(BaseAgent):
     def plan(self, goal: str) -> List[str]:
         """
         Break down the writing goal into steps.
+        Instead of relying on the LLM (which is unpredictable and can generate 11+ steps),
+        we enforce a strict, deterministic 4-step workflow to guarantee completion.
         """
         log.info(f"Writer planning for: {goal}")
 
-        # Use the LLM to plan
-        system_prompt = """You are a writing planner. Break down the writing goal into specific steps.
-
-        For writing tasks, typical steps are:
-        1. Review all research and analysis
-        2. Organize information into sections
-        3. Write each section
-        4. Edit and polish the report
-        5. Save the final report
-
-        Return a list of steps (one per line)."""
-
-        user_prompt = f"Writing goal: {goal}\n\nBreak this down into specific steps."
-
-        response = self.ask_llm(system_prompt, user_prompt)
-
-        # Parse the response into steps
-        steps = []
-        for line in response.strip().split("\n"):
-            line = line.strip()
-            if line and not line.startswith("#"):
-                # Remove numbering
-                clean_line = line
-                if line[0].isdigit() and ". " in line:
-                    clean_line = line.split(". ", 1)[1] if ". " in line else line
-                elif line.startswith("- "):
-                    clean_line = line[2:]
-                elif line.startswith("* "):
-                    clean_line = line[2:]
-
-                if clean_line:
-                    steps.append(clean_line)
-
-        # If no steps were parsed, use default steps
-        if not steps:
-            steps = [
-                "Review research and analysis from memory",
-                "Organize information into report sections",
-                "Write the executive summary",
-                "Write the detailed analysis",
-                "Write conclusions and recommendations",
-                "Save the report to a file",
-            ]
+        # Hardcoded deterministic steps guarantee we never hit the max_steps limit
+        # and guarantee that the report is ALWAYS saved at the end.
+        steps = [
+            "Review research and analysis from memory",
+            "Organize information into a report outline",
+            "Write the comprehensive professional report",
+            "Save the final report to a file"
+        ]
 
         log.info(f"Planned {len(steps)} steps")
         return steps
@@ -97,18 +66,14 @@ class WriterAgent(BaseAgent):
             return self._execute_review(step)
 
         # Step 2: Organize
-        elif "organize" in step_lower or "section" in step_lower:
+        elif "organize" in step_lower or "outline" in step_lower:
             return self._execute_organize(step)
 
         # Step 3: Write
-        elif "write" in step_lower or "summary" in step_lower or "executive" in step_lower:
+        elif "write" in step_lower or "report" in step_lower:
             return self._execute_write(step)
 
-        # Step 4: Edit
-        # elif "edit" in step_lower or "polish" in step_lower:
-        #     return self._execute_edit(step)
-
-        # Step 5: Save
+        # Step 4: Save
         elif "save" in step_lower or "file" in step_lower:
             return self._execute_save(step)
 
@@ -139,15 +104,15 @@ class WriterAgent(BaseAgent):
 
         # Format for review
         memory_text = "Research findings:\n"
-        for r in research[:10]:
+        for r in research[:15]:
             memory_text += f"- {r.content}\n"
 
         memory_text += "\nKey facts:\n"
-        for f in facts[:10]:
+        for f in facts[:15]:
             memory_text += f"- {f.content}\n"
 
         memory_text += "\nInsights:\n"
-        for i in insights[:10]:
+        for i in insights[:15]:
             memory_text += f"- {i.content}\n"
 
         if not memory_text:
@@ -172,19 +137,18 @@ class WriterAgent(BaseAgent):
             return {"summary": "No content to organize", "error": "No review found"}
 
         # Using LLM to organize
-        system_prompt = """You are a report organizer. Create a clear outline for a professional report.
+        system_prompt = """You are a report organizer. Create a clear outline for a professional competitive intelligence report.
 
-        The report should include:
+        The report MUST include:
         1. Executive Summary
-        2. Introduction
-        3. Key Findings
-        4. Detailed Analysis
-        5. Conclusions
-        6. Recommendations
+        2. Market Overview
+        3. Major Players & Competitors
+        4. Detailed Analysis (Strengths, Weaknesses, Trends)
+        5. Conclusions & Future Outlook
 
         Provide a detailed outline with bullet points for each section."""
 
-        user_prompt = f"Content to organize:\n{review[:2000]}\n\nCreate a report outline."
+        user_prompt = f"Content to organize:\n{review[:3000]}\n\nCreate a report outline based ONLY on this provided data."
 
         response = self.ask_llm(system_prompt, user_prompt)
 
@@ -194,9 +158,7 @@ class WriterAgent(BaseAgent):
         """
         Write the report.
         """
-        from src.utils.trace import publish_trace
-
-        publish_trace("Writer", "Starting to write report...")
+        publish_trace("Writer", "Drafting the full comprehensive report...")
 
         # Get the outline
         outline = self._get_last_outline()
@@ -208,56 +170,30 @@ class WriterAgent(BaseAgent):
         # Use LLM to write the report
         system_prompt = """You are a professional report writer. Write a comprehensive, well-structured report.
 
-        The report should be:
-        1. Professional and clear
-        2. Well-organized with headings
-        3. Evidence-based
-        4. Actionable
+        The report MUST:
+        1. Be written in a professional, formal, business-friendly tone.
+        2. Use clear markdown formatting (H1, H2, H3, bullet points, bold text).
+        3. Be evidence-based, utilizing only the provided research data.
+        4. Flow logically from the Executive Summary to the Conclusion.
+        5. Be highly detailed and thorough. Do not summarize too briefly.
 
-        Write in a formal, business-friendly tone."""
+        Write the COMPLETE report in one single response."""
 
         user_prompt = f"""Write a professional report based on this information:
 
         Outline:
         {outline if outline else "Use a standard report structure"}
 
-        Content:
-        {review[:1500] if review else "No additional content provided"}
+        Data/Research Content:
+        {review[:4000] if review else "No additional content provided"}
 
-        Write the complete report."""
+        Write the complete report now."""
 
         response = self.ask_llm(system_prompt, user_prompt)
 
-        publish_trace("Writer", "Report written", f"{len(response)} characters")
+        publish_trace("Writer", "Report written", f"{len(response)} characters generated.")
 
         return {"summary": "Report written", "report": response}
-
-    def _execute_edit(self, step: str) -> Dict[str, Any]:
-        """
-        Edit and polish the report.
-        """
-        # Get the report
-        report = self._get_last_report()
-
-        if not report:
-            return {"summary": "No report to edit", "error": "No report found"}
-
-        # Use LLM to edit
-        system_prompt = """You are a professional editor. Polish the report for clarity, grammar, and flow.
-
-        Fix:
-        1. Grammar and spelling
-        2. Sentence flow
-        3. Clarity
-        4. Professional tone
-
-        Return the polished version."""
-
-        user_prompt = f"Report to edit:\n\n{report}\n\nProvide the polished version."
-
-        response = self.ask_llm(system_prompt, user_prompt)
-
-        return {"summary": "Report edited and polished", "polished_report": response}
 
     def _execute_save(self, step: str) -> Dict[str, Any]:
         """
@@ -265,22 +201,17 @@ class WriterAgent(BaseAgent):
         """
         # Get the report
         report = self._get_last_report()
-        polished = self._get_last_polished()
 
-        final_report = polished if polished else report
-
-        if not final_report:
+        if not report:
             return {"summary": "No report to save", "error": "No report found"}
 
         # Save to file
-        import os
-
         os.makedirs("reports", exist_ok=True)
         filename = f"report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
         filepath = f"reports/{filename}"
 
         with open(filepath, "w") as f:
-            f.write(final_report)
+            f.write(report)
 
         log.info(f"✅ Report saved to {filepath}")
 
@@ -292,13 +223,13 @@ class WriterAgent(BaseAgent):
             tags=["report", "output"],
         )
 
-        # Return BOTH the summary AND the report
+        # Return BOTH the summary AND the report (vital for the Orchestrator)
         return {
             "summary": f"Report saved to {filename}",
             "filename": filename,
             "filepath": filepath,
-            "report": final_report,
-            "polished_report": final_report,
+            "report": report,
+            "polished_report": report,
         }
 
     def _execute_general(self, step: str) -> Dict[str, Any]:
@@ -345,16 +276,6 @@ class WriterAgent(BaseAgent):
                 return result["report"]
         return None
 
-    def _get_last_polished(self) -> Optional[str]:
-        """Get the last polished report from context."""
-        if not self.context:
-            return None
-
-        for result in reversed(self.context.results):
-            if isinstance(result, dict) and result.get("polished_report"):
-                return result["polished_report"]
-        return None
-
     def reflect(self, result: Dict[str, Any]) -> Dict[str, Any]:
         """
         Reflect on the result and decide next steps.
@@ -364,12 +285,8 @@ class WriterAgent(BaseAgent):
         if result.get("error"):
             return {"should_stop": False, "reason": "Error occurred but continuing"}
 
-        # Check if we have a report ready
-        report = self._get_last_report()
-        polished = self._get_last_polished()
-
-        # If we have a report and we've done at least 3 steps, we can stop
-        if (report or polished) and self.context and self.context.current_step >= 3:
-            return {"should_stop": True, "reason": "Report complete"}
+        # We are using a 4-step hardcoded process. We stop when we reach step 4.
+        if self.context and self.context.current_step >= 4:
+            return {"should_stop": True, "reason": "Report complete and saved"}
 
         return {"should_stop": False, "reason": "Continuing writing"}

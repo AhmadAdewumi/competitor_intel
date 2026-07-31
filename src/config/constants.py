@@ -17,7 +17,7 @@ class AgentLimits:
     ANALYST_MAX_STEPS = 5
 
     # Writer
-    WRITER_MAX_STEPS = 4
+    WRITER_MAX_STEPS = 5
 
     # Topic Runner
     RUNNER_MAX_STEPS = 5
